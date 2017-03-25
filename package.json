@@ -1,7 +1,7 @@
 {
   "name": "quill-image-resize-module",
   "version": "1.0.0",
-  "description": "A module for Quill rich text editor to allow images to be pasted and drag/dropped into the editor.",
+  "description": "A module for Quill rich text editor to allow images to be resized.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
