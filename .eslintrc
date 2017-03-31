@@ -12,11 +12,18 @@
     "sourceType": "module",
     "ecmaFeatures": {
       "forOf": true,
-      "jsx": true,
       "es6": true,
       "experimentalObjectRestSpread": true
-    },
+    }
   },
   "rules": {
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "max-len": 0
   }
 }
