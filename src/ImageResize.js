@@ -47,15 +47,22 @@ export default class ImageResize {
         this.img = img;
         this.showResizers();
         this.showSizeDisplay();
+        this.showToolbar();
+        this.repositionElements();
+    };
+
+    repositionElements = () => {
         // position the resize handles at the corners
         const rect = this.img.getBoundingClientRect();
         this.positionBoxes(rect);
         this.positionSizeDisplay(rect);
+        this.positionToolbar(rect);
     };
 
     hide = () => {
         this.hideResizers();
         this.hideSizeDisplay();
+        this.hideToolbar();
         this.img = undefined;
     };
 
@@ -161,10 +168,7 @@ export default class ImageResize {
             // right-side resize handler; dragging right enlarges image
             this.img.width = Math.round((this.preDragWidth + evt.clientX) - this.dragStartX);
         }
-        // reposition the drag handles around the image
-        const rect = this.img.getBoundingClientRect();
-        this.positionBoxes(rect);
-        this.positionSizeDisplay(rect);
+        this.repositionElements();
     };
 
     setUserSelect = (value) => {
@@ -245,4 +249,123 @@ export default class ImageResize {
         Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight),
     ];
 
+    showToolbar = () => {
+        if (this.options.displayToolbar === false) {
+            return;
+        }
+
+        this.toolbar = document.createElement('div');
+
+        this.addToolbarButtons();
+
+        // Apply styles
+        Object.assign(this.toolbar.style, this.options.toolbarStyles);
+
+        // Attach it
+        document.body.appendChild(this.toolbar);
+    };
+
+    positionToolbar = (rect) => {
+        if (!this.toolbar || !this.img) {
+            return;
+        }
+
+        Object.assign(this.toolbar.style, {
+            left: `${Math.round(rect.left + window.pageXOffset + 8)}px`,
+            top: `${Math.round(rect.top + rect.height + window.pageYOffset - 8)}px`,
+        });
+    };
+
+    addToolbarButtons = () => {
+        this.addAlignLeft();
+        this.addAlignCenter();
+        this.addAlignRight();
+    };
+
+    addAlignLeft = () => {
+        if (this.options.toolbarButtons.alignLeft === false) {
+            return;
+        }
+
+        const button = document.createElement('button');
+        button.innerHTML = 'Align left';
+        button.onclick = this.onAlignLeft;
+
+        this.toolbar.appendChild(button);
+    };
+
+    onAlignLeft = () => {
+        if (this.img.getAttribute('data-align') === 'left') {
+            this.clearAlignmentStyles();
+            return;
+        }
+
+        this.clearAlignmentStyles();
+        this.img.style.float = 'left';
+        this.img.setAttribute('data-align', 'left');
+        this.repositionElements();
+    };
+
+    addAlignRight = () => {
+        if (this.options.toolbarButtons.alignRight === false) {
+            return;
+        }
+
+        const button = document.createElement('button');
+        button.innerHTML = 'Align right';
+        button.onclick = this.onAlignRight;
+
+        this.toolbar.appendChild(button);
+    };
+
+    onAlignRight = () => {
+        if (this.img.getAttribute('data-align') === 'right') {
+            this.clearAlignmentStyles();
+            return;
+        }
+
+        this.clearAlignmentStyles();
+        this.img.style.float = 'right';
+        this.img.setAttribute('data-align', 'right');
+        this.repositionElements();
+    };
+
+    addAlignCenter = () => {
+        if (this.options.toolbarButtons.alignCenter === false) {
+            return;
+        }
+
+        const button = document.createElement('button');
+        button.innerHTML = 'Align center';
+        button.onclick = this.onAlignCenter;
+
+        this.toolbar.appendChild(button);
+    };
+
+    onAlignCenter = () => {
+        if (this.img.getAttribute('data-align') === 'center') {
+            this.clearAlignmentStyles();
+            return;
+        }
+
+        this.clearAlignmentStyles();
+        this.img.style.display = 'block';
+        this.img.style.margin = 'auto';
+        this.img.setAttribute('data-align', 'center');
+        this.repositionElements();
+    };
+
+    clearAlignmentStyles = () => {
+        this.img.style.display = 'inline-block';
+        this.img.style.margin = '';
+        this.img.style.float = '';
+        this.img.removeAttribute('data-align');
+    };
+
+    hideToolbar = () => {
+        if (this.toolbar) {
+            document.body.removeChild(this.toolbar);
+        }
+        this.toolbar = undefined;
+    };
 }
