@@ -21,10 +21,12 @@
     "sizer"
   ],
   "author": "@kensnyder",
-  "contributors": [{
-    "name": "Wikia",
-    "url": "https://github.com/Wikia"
-  }],
+  "contributors": [
+    {
+      "name": "Wikia",
+      "url": "https://github.com/Wikia"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kensnyder/quill-image-resize-module/issues"
@@ -44,6 +46,7 @@
     "uglify-js": "^2.8.13"
   },
   "dependencies": {
+    "lodash": "^4.17.4",
     "quill": "^1.2.2"
   }
 }

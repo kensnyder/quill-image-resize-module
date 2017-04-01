@@ -1,3 +1,5 @@
+import { defaultsDeep } from 'lodash';
+import DefaultOptions from './DefaultOptions';
 /**
  * Custom module for quilljs to allow user to resize <img> elements
  * (Works on Chrome, Edge, Safari and replaces Firefox's native resize behavior)
@@ -8,13 +10,17 @@ export default class ImageResize {
     constructor(quill, options = {}) {
         // save the quill reference and options
         this.quill = quill;
-        this.options = options;
+
+        // Apply the options to our defaults, and stash them for later
+        this.options = defaultsDeep({}, options, DefaultOptions);
+
         // bind handlers to this instance
         this.handleClick = this.handleClick.bind(this);
         this.handleMousedown = this.handleMousedown.bind(this);
         this.handleMouseup = this.handleMouseup.bind(this);
         this.handleDrag = this.handleDrag.bind(this);
         this.checkImage = this.checkImage.bind(this);
+
         // track resize handles
         this.boxes = [];
         // disable native image resizing on firefox
@@ -90,18 +96,15 @@ export default class ImageResize {
     addBox(cursor) {
         // create div element for resize handle
         const box = document.createElement('div');
-        // apply styles
-        const styles = {
-            position: 'absolute',
-            height: '12px',
-            width: '12px',
-            backgroundColor: 'white',
-            border: '1px solid #777',
-            boxSizing: 'border-box',
-            opacity: '0.80',
-            cursor,
-        };
-        extend(box.style, styles, this.options.handleStyles || {});
+
+        // Star with the specified styles
+        Object.assign(box.style, this.options.handleStyles);
+        box.style.cursor = cursor;
+
+        // Set the width/height to use 'px'
+        box.style.width = `${this.options.handleStyles.width}px`;
+        box.style.height = `${this.options.handleStyles.height}px`;
+
         // listen for mousedown on each box
         box.addEventListener('mousedown', this.handleMousedown, false);
         // add drag handle to document
@@ -111,14 +114,17 @@ export default class ImageResize {
     }
 
     positionBoxes(rect) {
+        const handleXOffset = this.options.handleStyles.width / 2;
+        const handleYOffset = this.options.handleStyles.height / 2;
+
         // set the top and left for each drag handle
         [
-            { left: rect.left - 6, top: rect.top - 6 },               // top left
-            { left: rect.left + rect.width - 6, top: rect.top - 6 },               // top right
-            { left: rect.left + rect.width - 6, top: rect.top + rect.height - 6 }, // bottom right
-            { left: rect.left - 6, top: rect.top + rect.height - 6 }, // bottom left
+            { left: rect.left - handleXOffset, top: rect.top - handleYOffset },                                 // top left
+            { left: (rect.left + rect.width) - handleXOffset, top: rect.top - handleYOffset },                  // top right
+            { left: (rect.left + rect.width) - handleXOffset, top: (rect.top + rect.height) - handleYOffset },  // bottom right
+            { left: rect.left - handleXOffset, top: (rect.top + rect.height) - handleYOffset },                 // bottom left
         ].forEach((pos, idx) => {
-            extend(this.boxes[idx].style, {
+            Object.assign(this.boxes[idx].style, {
                 top: `${Math.round(pos.top + window.pageYOffset)}px`,
                 left: `${Math.round(pos.left + window.pageXOffset)}px`,
             });
@@ -153,12 +159,12 @@ export default class ImageResize {
             return;
         }
         // update image size
-        if (this.dragBox == this.boxes[0] || this.dragBox == this.boxes[3]) {
-            // left-side resize handler; draging right shrinks image
-            this.img.width = Math.round(this.preDragWidth - evt.clientX - this.dragStartX);
+        if (this.dragBox === this.boxes[0] || this.dragBox === this.boxes[3]) {
+            // left-side resize handler; dragging right shrinks image
+            this.img.width = Math.round((this.preDragWidth - evt.clientX) - this.dragStartX);
         } else {
-            // right-side resize handler; draging right enlarges image
-            this.img.width = Math.round(this.preDragWidth + evt.clientX - this.dragStartX);
+            // right-side resize handler; dragging right enlarges image
+            this.img.width = Math.round((this.preDragWidth + evt.clientX) - this.dragStartX);
         }
         // reposition the drag handles around the image
         const rect = this.img.getBoundingClientRect();
@@ -184,7 +190,9 @@ export default class ImageResize {
             document.body,
             this.img,
             this.quill.root,
-        ].forEach(el => el.style.cursor = value);
+        ].forEach((el) => {
+            el.style.cursor = value;   // eslint-disable-line no-param-reassign
+        });
     }
 
     checkImage() {
@@ -197,26 +205,21 @@ export default class ImageResize {
         if (!this.options.displaySize) {
             return;
         }
+
+        // Create the container to hold the size display
         this.display = document.createElement('div');
-        // apply styles
-        const styles = {
-            position: 'absolute',
-            font: '12px/1.0 Arial, Helvetica, sans-serif',
-            padding: '4px 8px',
-            textAlign: 'center',
-            backgroundColor: 'white',
-            color: '#333',
-            border: '1px solid #777',
-            boxSizing: 'border-box',
-            opacity: '0.80',
-            cursor: 'default',
-        };
-        extend(this.display.style, styles, this.options.displayStyles || {});
+
+        // Apply styles
+        Object.assign(this.display.style, this.options.displayStyles);
+
+        // Attach it
         document.body.appendChild(this.display);
     }
 
     hideSizeDisplay() {
-        document.body.removeChild(this.display);
+        if (this.display) {
+            document.body.removeChild(this.display);
+        }
         this.display = undefined;
     }
 
@@ -229,13 +232,13 @@ export default class ImageResize {
         if (size[0] > 120 && size[1] > 30) {
             // position on top of image
             const dispRect = this.display.getBoundingClientRect();
-            extend(this.display.style, {
-                left: `${Math.round(rect.left + rect.width + window.pageXOffset - dispRect.width - 8)}px`,
-                top: `${Math.round(rect.top + rect.height + window.pageYOffset - dispRect.height - 8)}px`,
+            Object.assign(this.display.style, {
+                left: `${Math.round((rect.left + rect.width + window.pageXOffset) - dispRect.width - 8)}px`,
+                top: `${Math.round((rect.top + rect.height + window.pageYOffset) - dispRect.height - 8)}px`,
             });
         } else {
             // position off bottom right
-            extend(this.display.style, {
+            Object.assign(this.display.style, {
                 left: `${Math.round(rect.left + rect.width + window.pageXOffset + 8)}px`,
                 top: `${Math.round(rect.top + rect.height + window.pageYOffset + 8)}px`,
             });
@@ -245,19 +248,8 @@ export default class ImageResize {
     getCurrentSize() {
         return [
             this.img.width,
-            Math.round(this.img.width / this.img.naturalWidth * this.img.naturalHeight),
+            Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight),
         ];
     }
 
-}
-
-function extend(destination, ...sources) {
-    sources.forEach((source) => {
-        for (const prop in source) {
-            if (source.hasOwnProperty(prop)) {
-                destination[prop] = source[prop];
-            }
-        }
-    });
-    return destination;
 }
