@@ -1,4 +1,13 @@
+import DisplaySize from './modules/DisplaySize';
+import Toolbar from './modules/Toolbar';
+import Resize from './modules/Resize';
+
 export default {
+    modules: [
+        DisplaySize,
+        Toolbar,
+        Resize,
+    ],
     overlayStyles: {
         position: 'absolute',
         boxSizing: 'border-box',
@@ -12,7 +21,6 @@ export default {
         boxSizing: 'border-box',
         opacity: '0.80',
     },
-    displaySize: true,
     displayStyles: {
         position: 'absolute',
         font: '12px/1.0 Arial, Helvetica, sans-serif',
@@ -25,7 +33,6 @@ export default {
         opacity: '0.80',
         cursor: 'default',
     },
-    displayToolbar: true,
     toolbarButtons: {
         alignLeft: true,
         alignRight: true,
