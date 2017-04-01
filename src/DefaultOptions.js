@@ -1,4 +1,8 @@
 export default {
+    overlayStyles: {
+        position: 'absolute',
+        boxSizing: 'border-box',
+    },
     handleStyles: {
         position: 'absolute',
         height: 12,
@@ -24,7 +28,7 @@ export default {
     displayToolbar: true,
     toolbarButtons: {
         alignLeft: true,
-        alignRight: true
+        alignRight: true,
     },
     toolbarStyles: {
         position: 'absolute',
@@ -35,12 +39,13 @@ export default {
         color: '#333',
         border: '1px solid #777',
         boxSizing: 'border-box',
+        minWidth: '300px',
         boxShadow: '2px 2px 2px rgba(0,0,0,0.25)',
         cursor: 'default',
     },
     toolbarButtonStyles: {
         alignLeft: {},
         alignCenter: {},
-        alignRight: {}
-    }
+        alignRight: {},
+    },
 };

@@ -45,24 +45,59 @@ export default class ImageResize {
     show = (img) => {
         // keep track of this img element
         this.img = img;
-        this.showResizers();
-        this.showSizeDisplay();
+
+        this.showOverlay();
+
         this.showToolbar();
+        this.showSizeDisplay();
+        this.showResizers();
+    };
+
+    showOverlay = () => {
+        if (this.overlay) {
+            this.hideOverlay();
+        }
+
+        this.overlay = document.createElement('div');
+        Object.assign(this.overlay.style, this.options.overlayStyles);
+
+        document.body.appendChild(this.overlay);
+
         this.repositionElements();
     };
 
+    hideOverlay = () => {
+        if (!this.overlay) {
+            return;
+        }
+
+        document.body.removeChild(this.overlay);
+        this.overlay = undefined;
+    };
+
     repositionElements = () => {
-        // position the resize handles at the corners
+        if (!this.overlay || !this.img) {
+            return;
+        }
+
+        // position the overlay over the image
         const rect = this.img.getBoundingClientRect();
-        this.positionBoxes(rect);
-        this.positionSizeDisplay(rect);
-        this.positionToolbar(rect);
+
+        Object.assign(this.overlay.style, {
+            left: `${rect.left + window.pageXOffset}px`,
+            top: `${rect.top + window.pageYOffset}px`,
+            width: `${rect.width}px`,
+            height: `${rect.height}px`,
+        });
+
+        this.positionSizeDisplay();
     };
 
     hide = () => {
         this.hideResizers();
         this.hideSizeDisplay();
         this.hideToolbar();
+        this.hideOverlay();
         this.img = undefined;
     };
 
@@ -77,6 +112,7 @@ export default class ImageResize {
         // listen for the image being deleted or moved
         document.addEventListener('keyup', this.checkImage, true);
         this.quill.root.addEventListener('input', this.checkImage, true);
+        this.positionBoxes();
     };
 
     hideResizers = () => {
@@ -87,7 +123,7 @@ export default class ImageResize {
         this.setUserSelect('');
         this.setCursor('');
         // remove boxes
-        this.boxes.forEach(box => document.body.removeChild(box));
+        this.boxes.forEach(box => box.parentNode.removeChild(box));
         // release memory
         this.dragBox = undefined;
         this.dragStartX = undefined;
@@ -110,26 +146,23 @@ export default class ImageResize {
         // listen for mousedown on each box
         box.addEventListener('mousedown', this.handleMousedown, false);
         // add drag handle to document
-        document.body.appendChild(box);
+        this.overlay.appendChild(box);
         // keep track of drag handle
         this.boxes.push(box);
     };
 
-    positionBoxes = (rect) => {
-        const handleXOffset = this.options.handleStyles.width / 2;
-        const handleYOffset = this.options.handleStyles.height / 2;
+    positionBoxes = () => {
+        const handleXOffset = `${-this.options.handleStyles.width / 2}px`;
+        const handleYOffset = `${-this.options.handleStyles.height / 2}px`;
 
         // set the top and left for each drag handle
         [
-            { left: rect.left - handleXOffset, top: rect.top - handleYOffset },                                 // top left
-            { left: (rect.left + rect.width) - handleXOffset, top: rect.top - handleYOffset },                  // top right
-            { left: (rect.left + rect.width) - handleXOffset, top: (rect.top + rect.height) - handleYOffset },  // bottom right
-            { left: rect.left - handleXOffset, top: (rect.top + rect.height) - handleYOffset },                 // bottom left
+            { left: handleXOffset, top: handleYOffset },        // top left
+            { right: handleXOffset, top: handleYOffset },       // top right
+            { right: handleXOffset, bottom: handleYOffset },    // bottom right
+            { left: handleXOffset, bottom: handleYOffset },     // bottom left
         ].forEach((pos, idx) => {
-            Object.assign(this.boxes[idx].style, {
-                top: `${Math.round(pos.top + window.pageYOffset)}px`,
-                left: `${Math.round(pos.left + window.pageXOffset)}px`,
-            });
+            Object.assign(this.boxes[idx].style, pos);
         });
     };
 
@@ -178,7 +211,7 @@ export default class ImageResize {
             'webkitUserSelect',
             'msUserSelect',
         ].forEach((prop) => {
-            // set on contenteditable element and <html>
+                // set on contenteditable element and <html>
             this.quill.root.style[prop] = value;
             document.documentElement.style[prop] = value;
         });
@@ -201,7 +234,7 @@ export default class ImageResize {
     };
 
     showSizeDisplay = () => {
-        if (!this.options.displaySize) {
+        if (!this.options.displaySize || !this.overlay) {
             return;
         }
 
@@ -212,34 +245,40 @@ export default class ImageResize {
         Object.assign(this.display.style, this.options.displayStyles);
 
         // Attach it
-        document.body.appendChild(this.display);
+        this.overlay.appendChild(this.display);
+        this.positionSizeDisplay();
     };
 
     hideSizeDisplay = () => {
         if (this.display) {
-            document.body.removeChild(this.display);
+            this.display.parentNode.removeChild(this.display);
         }
         this.display = undefined;
     };
 
-    positionSizeDisplay = (rect) => {
+    positionSizeDisplay = () => {
         if (!this.display || !this.img) {
             return;
         }
+
         const size = this.getCurrentSize();
         this.display.innerHTML = size.join(' &times; ');
         if (size[0] > 120 && size[1] > 30) {
             // position on top of image
-            const dispRect = this.display.getBoundingClientRect();
             Object.assign(this.display.style, {
-                left: `${Math.round((rect.left + rect.width + window.pageXOffset) - dispRect.width - 8)}px`,
-                top: `${Math.round((rect.top + rect.height + window.pageYOffset) - dispRect.height - 8)}px`,
+                top: 'initial',
+                left: 'initial',
+                bottom: 0,
+                right: 0,
             });
         } else {
-            // position off bottom right
+            // position off top right
+            const dispRect = this.display.getBoundingClientRect();
             Object.assign(this.display.style, {
-                left: `${Math.round(rect.left + rect.width + window.pageXOffset + 8)}px`,
-                top: `${Math.round(rect.top + rect.height + window.pageYOffset + 8)}px`,
+                top: 0,
+                right: `-${dispRect.width}px`,
+                left: 'initial',
+                bottom: 'initial',
             });
         }
     };
@@ -262,17 +301,21 @@ export default class ImageResize {
         Object.assign(this.toolbar.style, this.options.toolbarStyles);
 
         // Attach it
-        document.body.appendChild(this.toolbar);
+        this.overlay.appendChild(this.toolbar);
+
+        this.positionToolbar();
     };
 
-    positionToolbar = (rect) => {
+    positionToolbar = () => {
         if (!this.toolbar || !this.img) {
             return;
         }
 
+        const dispRect = this.toolbar.getBoundingClientRect();
+
         Object.assign(this.toolbar.style, {
-            left: `${Math.round(rect.left + window.pageXOffset + 8)}px`,
-            top: `${Math.round(rect.top + rect.height + window.pageYOffset - 8)}px`,
+            left: 0,
+            bottom: `${-dispRect.height}px`,
         });
     };
 
@@ -360,11 +403,12 @@ export default class ImageResize {
         this.img.style.margin = '';
         this.img.style.float = '';
         this.img.removeAttribute('data-align');
+        this.repositionElements();
     };
 
     hideToolbar = () => {
         if (this.toolbar) {
-            document.body.removeChild(this.toolbar);
+            this.toolbar.parentNode.removeChild(this.toolbar);
         }
         this.toolbar = undefined;
     };
