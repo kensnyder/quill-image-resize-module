@@ -14,22 +14,17 @@ export default class ImageResize {
         // Apply the options to our defaults, and stash them for later
         this.options = defaultsDeep({}, options, DefaultOptions);
 
-        // bind handlers to this instance
-        this.handleClick = this.handleClick.bind(this);
-        this.handleMousedown = this.handleMousedown.bind(this);
-        this.handleMouseup = this.handleMouseup.bind(this);
-        this.handleDrag = this.handleDrag.bind(this);
-        this.checkImage = this.checkImage.bind(this);
-
         // track resize handles
         this.boxes = [];
+
         // disable native image resizing on firefox
         document.execCommand('enableObjectResizing', false, 'false');
+
         // respond to clicks inside the editor
         this.quill.root.addEventListener('click', this.handleClick, false);
     }
 
-    handleClick(evt) {
+    handleClick = (evt) => {
         if (evt.target && evt.target.tagName && evt.target.tagName.toUpperCase() === 'IMG') {
             if (this.img === evt.target) {
                 // we are already focused on this image
@@ -45,9 +40,9 @@ export default class ImageResize {
             // clicked on a non image
             this.hide();
         }
-    }
+    };
 
-    show(img) {
+    show = (img) => {
         // keep track of this img element
         this.img = img;
         this.showResizers();
@@ -56,15 +51,15 @@ export default class ImageResize {
         const rect = this.img.getBoundingClientRect();
         this.positionBoxes(rect);
         this.positionSizeDisplay(rect);
-    }
+    };
 
-    hide() {
+    hide = () => {
         this.hideResizers();
         this.hideSizeDisplay();
         this.img = undefined;
-    }
+    };
 
-    showResizers() {
+    showResizers = () => {
         // prevent spurious text selection
         this.setUserSelect('none');
         // add 4 resize handles
@@ -75,9 +70,9 @@ export default class ImageResize {
         // listen for the image being deleted or moved
         document.addEventListener('keyup', this.checkImage, true);
         this.quill.root.addEventListener('input', this.checkImage, true);
-    }
+    };
 
-    hideResizers() {
+    hideResizers = () => {
         // stop listening for image deletion or movement
         document.removeEventListener('keyup', this.checkImage);
         this.quill.root.removeEventListener('input', this.checkImage);
@@ -91,9 +86,9 @@ export default class ImageResize {
         this.dragStartX = undefined;
         this.preDragWidth = undefined;
         this.boxes = [];
-    }
+    };
 
-    addBox(cursor) {
+    addBox = (cursor) => {
         // create div element for resize handle
         const box = document.createElement('div');
 
@@ -111,9 +106,9 @@ export default class ImageResize {
         document.body.appendChild(box);
         // keep track of drag handle
         this.boxes.push(box);
-    }
+    };
 
-    positionBoxes(rect) {
+    positionBoxes = (rect) => {
         const handleXOffset = this.options.handleStyles.width / 2;
         const handleYOffset = this.options.handleStyles.height / 2;
 
@@ -129,9 +124,9 @@ export default class ImageResize {
                 left: `${Math.round(pos.left + window.pageXOffset)}px`,
             });
         });
-    }
+    };
 
-    handleMousedown(evt) {
+    handleMousedown = (evt) => {
         // note which box
         this.dragBox = evt.target;
         // note starting mousedown position
@@ -143,17 +138,17 @@ export default class ImageResize {
         // listen for movement and mouseup
         document.addEventListener('mousemove', this.handleDrag, false);
         document.addEventListener('mouseup', this.handleMouseup, false);
-    }
+    };
 
-    handleMouseup() {
+    handleMouseup = () => {
         // reset cursor everywhere
         this.setCursor('');
         // stop listening for movement and mouseup
         document.removeEventListener('mousemove', this.handleDrag);
         document.removeEventListener('mouseup', this.handleMouseup);
-    }
+    };
 
-    handleDrag(evt) {
+    handleDrag = (evt) => {
         if (!this.img) {
             // image not set yet
             return;
@@ -170,9 +165,9 @@ export default class ImageResize {
         const rect = this.img.getBoundingClientRect();
         this.positionBoxes(rect);
         this.positionSizeDisplay(rect);
-    }
+    };
 
-    setUserSelect(value) {
+    setUserSelect = (value) => {
         [
             'userSelect',
             'mozUserSelect',
@@ -183,9 +178,9 @@ export default class ImageResize {
             this.quill.root.style[prop] = value;
             document.documentElement.style[prop] = value;
         });
-    }
+    };
 
-    setCursor(value) {
+    setCursor = (value) => {
         [
             document.body,
             this.img,
@@ -193,15 +188,15 @@ export default class ImageResize {
         ].forEach((el) => {
             el.style.cursor = value;   // eslint-disable-line no-param-reassign
         });
-    }
+    };
 
-    checkImage() {
+    checkImage = () => {
         if (this.img) {
             this.hide();
         }
-    }
+    };
 
-    showSizeDisplay() {
+    showSizeDisplay = () => {
         if (!this.options.displaySize) {
             return;
         }
@@ -214,16 +209,16 @@ export default class ImageResize {
 
         // Attach it
         document.body.appendChild(this.display);
-    }
+    };
 
-    hideSizeDisplay() {
+    hideSizeDisplay = () => {
         if (this.display) {
             document.body.removeChild(this.display);
         }
         this.display = undefined;
-    }
+    };
 
-    positionSizeDisplay(rect) {
+    positionSizeDisplay = (rect) => {
         if (!this.display || !this.img) {
             return;
         }
@@ -243,13 +238,11 @@ export default class ImageResize {
                 top: `${Math.round(rect.top + rect.height + window.pageYOffset + 8)}px`,
             });
         }
-    }
+    };
 
-    getCurrentSize() {
-        return [
-            this.img.width,
-            Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight),
-        ];
-    }
+    getCurrentSize = () => [
+        this.img.width,
+        Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight),
+    ];
 
 }
