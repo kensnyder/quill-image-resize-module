@@ -240,11 +240,9 @@ export default class ImageResize {
         }
     };
 
-    getCurrentSize = () => {
-        return [
-            this.img.width,
-            Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight),
-        ];
-    };
+    getCurrentSize = () => [
+        this.img.width,
+        Math.round((this.img.width / this.img.naturalWidth) * this.img.naturalHeight),
+    ];
 
 }

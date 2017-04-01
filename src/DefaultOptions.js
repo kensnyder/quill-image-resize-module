@@ -6,7 +6,7 @@ export default {
         backgroundColor: 'white',
         border: '1px solid #777',
         boxSizing: 'border-box',
-        opacity: '0.80'
+        opacity: '0.80',
     },
     displaySize: true,
     displayStyles: {
@@ -19,6 +19,6 @@ export default {
         border: '1px solid #777',
         boxSizing: 'border-box',
         opacity: '0.80',
-        cursor: 'default'
+        cursor: 'default',
     },
 };
