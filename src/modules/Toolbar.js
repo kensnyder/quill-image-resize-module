@@ -1,6 +1,6 @@
-import IconAlignLeft from '!!raw-loader!quill/assets/icons/align-left.svg'; // eslint-disable-line import/no-webpack-loader-syntax
-import IconAlignRight from '!!raw-loader!quill/assets/icons/align-right.svg'; // eslint-disable-line import/no-webpack-loader-syntax
-import IconAlignCenter from '!!raw-loader!quill/assets/icons/align-center.svg'; // eslint-disable-line import/no-webpack-loader-syntax
+import IconAlignLeft from 'quill/assets/icons/align-left.svg';
+import IconAlignRight from 'quill/assets/icons/align-right.svg';
+import IconAlignCenter from 'quill/assets/icons/align-center.svg';
 import BaseModule from './BaseModule';
 
 export default class Toolbar extends BaseModule {
