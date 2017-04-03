@@ -11,7 +11,7 @@ export { default as Resize } from './modules/Resize';
  * (Works on Chrome, Edge, Safari and replaces Firefox's native resize behavior)
  * @see https://quilljs.com/blog/building-a-custom-module/
  */
-export default class ImageResize {
+class ImageResize {
 
     constructor(quill, options = {}) {
         // save the quill reference and options
@@ -184,4 +184,10 @@ export default class ImageResize {
             this.hide();
         }
     };
+}
+
+export default ImageResize;
+
+if (window.Quill) {
+    window.Quill.register('modules/imageResize', ImageResize);
 }

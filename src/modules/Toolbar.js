@@ -1,3 +1,6 @@
+import IconAlignLeft from '!!raw-loader!quill/assets/icons/align-left.svg'; // eslint-disable-line import/no-webpack-loader-syntax
+import IconAlignRight from '!!raw-loader!quill/assets/icons/align-right.svg'; // eslint-disable-line import/no-webpack-loader-syntax
+import IconAlignCenter from '!!raw-loader!quill/assets/icons/align-center.svg'; // eslint-disable-line import/no-webpack-loader-syntax
 import BaseModule from './BaseModule';
 
 export default class Toolbar extends BaseModule {
@@ -28,7 +31,7 @@ export default class Toolbar extends BaseModule {
         const dispRect = this.toolbar.getBoundingClientRect();
 
         Object.assign(this.toolbar.style, {
-            left: 0,
+            left: '16px',
             bottom: `${-dispRect.height}px`,
         });
     };
@@ -45,19 +48,26 @@ export default class Toolbar extends BaseModule {
         }
 
         const button = document.createElement('button');
-        button.innerHTML = 'Align left';
+        button.innerHTML = IconAlignLeft;
         button.onclick = this.onAlignLeft;
+        Object.assign(button.style, this.options.toolbarButtonStyles.alignLeft);
+        Object.assign(button.getElementsByTagName('svg')[0].style, this.options.toolbarButtonSvgStyles);
+
+        if (this.img.getAttribute('data-align') === 'left') {
+            this.styleButtonAsSelected(button);
+        }
 
         this.toolbar.appendChild(button);
     };
 
-    onAlignLeft = () => {
+    onAlignLeft = (evt) => {
         if (this.img.getAttribute('data-align') === 'left') {
             this.clearAlignmentStyles();
             return;
         }
 
         this.clearAlignmentStyles();
+        this.styleButtonAsSelected(evt.currentTarget);
         this.img.style.float = 'left';
         this.img.setAttribute('data-align', 'left');
         this.requestUpdate();
@@ -69,19 +79,26 @@ export default class Toolbar extends BaseModule {
         }
 
         const button = document.createElement('button');
-        button.innerHTML = 'Align right';
+        button.innerHTML = IconAlignRight;
         button.onclick = this.onAlignRight;
+        Object.assign(button.style, this.options.toolbarButtonStyles.alignRight);
+        Object.assign(button.getElementsByTagName('svg')[0].style, this.options.toolbarButtonSvgStyles);
+
+        if (this.img.getAttribute('data-align') === 'right') {
+            this.styleButtonAsSelected(button);
+        }
 
         this.toolbar.appendChild(button);
     };
 
-    onAlignRight = () => {
+    onAlignRight = (evt) => {
         if (this.img.getAttribute('data-align') === 'right') {
             this.clearAlignmentStyles();
             return;
         }
 
         this.clearAlignmentStyles();
+        this.styleButtonAsSelected(evt.currentTarget);
         this.img.style.float = 'right';
         this.img.setAttribute('data-align', 'right');
         this.requestUpdate();
@@ -93,27 +110,43 @@ export default class Toolbar extends BaseModule {
         }
 
         const button = document.createElement('button');
-        button.innerHTML = 'Align center';
+        button.innerHTML = IconAlignCenter;
         button.onclick = this.onAlignCenter;
+        Object.assign(button.style, this.options.toolbarButtonStyles.alignCenter);
+        Object.assign(button.getElementsByTagName('svg')[0].style, this.options.toolbarButtonSvgStyles);
+
+        if (this.img.getAttribute('data-align') === 'center') {
+            this.styleButtonAsSelected(button);
+        }
 
         this.toolbar.appendChild(button);
     };
 
-    onAlignCenter = () => {
+    onAlignCenter = (evt) => {
         if (this.img.getAttribute('data-align') === 'center') {
             this.clearAlignmentStyles();
             return;
         }
 
         this.clearAlignmentStyles();
-
+        this.styleButtonAsSelected(evt.currentTarget);
         this.img.style.display = 'block';
         this.img.style.margin = 'auto';
         this.img.setAttribute('data-align', 'center');
         this.requestUpdate();
     };
 
+    styleButtonAsSelected = (button) => {
+        button.style.filter = 'invert(10%)';    // eslint-disable-line no-param-reassign
+    };
+
     clearAlignmentStyles = () => {
+        Array.prototype.forEach.call(
+            this.toolbar.getElementsByTagName('button'),
+            (button) => {
+                button.style.filter = '';   // eslint-disable-line no-param-reassign
+            },
+        );
         this.img.style.display = 'inline-block';
         this.img.style.margin = '';
         this.img.style.float = '';
