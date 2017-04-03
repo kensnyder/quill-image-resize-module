@@ -89,12 +89,13 @@ export default class Resize extends BaseModule {
             return;
         }
         // update image size
+        const deltaX = evt.clientX - this.dragStartX;
         if (this.dragBox === this.boxes[0] || this.dragBox === this.boxes[3]) {
             // left-side resize handler; dragging right shrinks image
-            this.img.width = Math.round((this.preDragWidth - evt.clientX) - this.dragStartX);
+            this.img.width = Math.round(this.preDragWidth - deltaX);
         } else {
             // right-side resize handler; dragging right enlarges image
-            this.img.width = Math.round((this.preDragWidth + evt.clientX) - this.dragStartX);
+            this.img.width = Math.round(this.preDragWidth + deltaX);
         }
         this.requestUpdate();
     };
