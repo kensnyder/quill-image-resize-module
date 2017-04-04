@@ -23,7 +23,9 @@ const quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        imageResize: true
+        imageResize: {
+            // See "config" below
+        }
     }
 });
 ```
@@ -41,30 +43,50 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: true
-    }
-});
-```
-
-### Display pixel size
-
-Use the option `displaySize` to enable the display of pixel size.
-
-```javascript
-var quill = new Quill(editor, {
-    // ...
-    modules: {
-        // ...
         ImageResize: {
-            displaySize: true
+            // See "config" below
         }
     }
 });
 ```
 
-### Advanced Options
+### Config
 
-The look and feel of the image resize can be controlled with options.
+For the default experience, pass an empty object, like so:
+```javascript
+var quill = new Quill(editor, {
+    // ...
+    modules: {
+        // ...
+        ImageResize: {}
+    }
+});
+```
+
+Functionality is broken down into modules, which can be mixed and matched as you like.  For example, if you
+want to explicitly include all the currently available modules, you could do:
+
+```javascript
+import { DisplaySize, Toolbar, Resize } from 'quill-image-resize-module';
+
+const quill = new Quill(editor, {
+    // ...
+    modules: {
+        // ...
+        ImageResize: {
+            modules: [ Resize, DisplaySize, Toolbar ]   // ALL THE MODULES
+        }
+    }
+});
+```
+
+Each module will be described below.
+
+#### `Resize` - Resize the image
+
+Adds handles to the image's corners which can be dragged with the mouse to resize the image.
+
+The look and feel can be controlled with options:
 
 ```javascript
 var quill = new Quill(editor, {
@@ -72,13 +94,31 @@ var quill = new Quill(editor, {
     modules: {
         // ...
         ImageResize: {
+            // ...
             handleStyles: {
                 backgroundColor: 'black',
                 border: 'none',
-                borderRadius: '6px'
-                // other camelCase styles for resize handles
-            },
-            displaySize: true,
+                color: white
+                // other camelCase styles for size display
+            }
+        }
+    }
+});
+```
+
+#### `DisplaySize` - Display pixel size
+
+Shows the size of the image in pixels near the bottom right of the image.
+
+The look and feel can be controlled with options:
+
+```javascript
+var quill = new Quill(editor, {
+    // ...
+    modules: {
+        // ...
+        ImageResize: {
+            // ...
             displayStyles: {
                 backgroundColor: 'black',
                 border: 'none',
@@ -90,3 +130,63 @@ var quill = new Quill(editor, {
 });
 ```
 
+#### `Toolbar` - Image alignment tools
+
+Displays a toolbar below the image, where the user can select an alignment for the image.
+
+The look and feel can be controlled with options:
+
+```javascript
+var quill = new Quill(editor, {
+    // ...
+    modules: {
+        // ...
+        ImageResize: {
+            // ...
+            toolbarStyles: {
+                backgroundColor: 'black',
+                border: 'none',
+                color: white
+                // other camelCase styles for size display
+            },
+            toolbarButtonStyles: {
+                alignLeft: {
+                    // ...
+                },
+                alignCenter: {
+                    // ...
+                },
+                alignRight: {
+                    // ...
+                }
+            },
+        }
+    }
+});
+```
+
+#### `BaseModule` - Include your own custom module
+
+You can write your own module by extending the `BaseModule` class, and then including it in
+the module setup.
+
+For example,
+
+```javascript
+import { Resize, BaseModule } from 'quill-image-resize-module';
+
+class MyModule extends BaseModule {
+    // See src/modules/BaseModule.js for documentation on the various lifecycle callbacks
+}
+
+var quill = new Quill(editor, {
+    // ...
+    modules: {
+        // ...
+        ImageResize: {
+            modules: [ MyModule, Resize ],
+            // ...
+        }
+    }
+});
+```

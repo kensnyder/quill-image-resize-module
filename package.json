@@ -1,11 +1,12 @@
 {
   "name": "quill-image-resize-module",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A module for Quill rich text editor to allow images to be resized.",
-  "main": "index.js",
+  "main": "image-resize.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "release": "sh ./bin/release.sh",
+    "release": "webpack -p --progress --colors",
+    "dev": "webpack --progress --colors --watch",
     "lint": "eslint --ext js,es6 src",
     "fixlint": "eslint --fix --ext js,es6 src"
   },
@@ -35,6 +36,7 @@
   "devDependencies": {
     "babel-cli": "^6.24.0",
     "babel-eslint": "^7.2.1",
+    "babel-loader": "^6.4.1",
     "babel-plugin-transform-class-properties": "^6.23.0",
     "babel-preset-env": "^1.2.2",
     "babel-preset-es2015": "^6.24.0",
@@ -43,10 +45,11 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
-    "uglify-js": "^2.8.13"
+    "webpack": "^2.3.3"
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "quill": "^1.2.2"
+    "quill": "^1.2.2",
+    "raw-loader": "^0.5.1"
   }
 }

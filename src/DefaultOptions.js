@@ -46,13 +46,33 @@ export default {
         color: '#333',
         border: '1px solid #777',
         boxSizing: 'border-box',
-        minWidth: '300px',
         boxShadow: '2px 2px 2px rgba(0,0,0,0.25)',
         cursor: 'default',
+        display: 'flex',
+        justifyContent: 'space-between',
     },
     toolbarButtonStyles: {
-        alignLeft: {},
-        alignCenter: {},
-        alignRight: {},
+        alignLeft: {
+            width: '32px',
+            height: '32px',
+            background: 'white',
+            border: '1px solid #999',
+        },
+        alignCenter: {
+            width: '32px',
+            height: '32px',
+            background: 'white',
+            border: '1px solid #999',
+        },
+        alignRight: {
+            width: '32px',
+            height: '32px',
+            background: 'white',
+            border: '1px solid #999',
+        },
+    },
+    toolbarButtonSvgStyles: {
+        fill: '#444',
+        stroke: '#444',
     },
 };
