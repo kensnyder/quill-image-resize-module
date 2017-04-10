@@ -138,7 +138,7 @@ class ImageResize {
         }
 
         // Remove the overlay
-		this.quill.root.parentNode.removeChild(this.overlay);
+        this.quill.root.parentNode.removeChild(this.overlay);
         this.overlay = undefined;
 
         // stop listening for image deletion or movement
@@ -155,7 +155,7 @@ class ImageResize {
         }
 
         // position the overlay over the image
-		const parent = this.quill.root.parentNode;
+        const parent = this.quill.root.parentNode;
         const imgRect = this.img.getBoundingClientRect();
         const containerRect = parent.getBoundingClientRect();
 
@@ -188,11 +188,11 @@ class ImageResize {
 
     checkImage = (evt) => {
     	if (this.img) {
-			if (evt.keyCode == 46 || evt.keyCode == 8) {
-				Quill.find(this.img).deleteAt(0);
-			}
-            this.hide();
+        if (evt.keyCode == 46 || evt.keyCode == 8) {
+            Quill.find(this.img).deleteAt(0);
         }
+        this.hide();
+    }
     };
 }
 

@@ -11,7 +11,7 @@ export default {
     overlayStyles: {
         position: 'absolute',
         boxSizing: 'border-box',
-		border: '1px dashed #444',
+        border: '1px dashed #444',
     },
     handleStyles: {
         position: 'absolute',
@@ -48,7 +48,7 @@ export default {
         cursor: 'default',
     },
     toolbarButtonStyles: {
-    	display: 'inline-block',
+		display: 'inline-block',
 		width: '24px',
 		height: '24px',
 		background: 'white',
@@ -56,8 +56,8 @@ export default {
 		verticalAlign: 'middle',
     },
     toolbarButtonSvgStyles: {
-        fill: '#444',
-        stroke: '#444',
+		fill: '#444',
+		stroke: '#444',
 		strokeWidth: '2',
     },
 };
