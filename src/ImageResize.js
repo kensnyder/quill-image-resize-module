@@ -38,6 +38,8 @@ class ImageResize {
         // respond to clicks inside the editor
         this.quill.root.addEventListener('click', this.handleClick, false);
 
+        this.quill.root.parentNode.style.position = this.quill.root.parentNode.style.position || 'relative';
+
         // setup modules
         this.moduleClasses = this.options.modules;
 
@@ -48,7 +50,7 @@ class ImageResize {
         this.removeModules();
 
         this.modules = this.moduleClasses.map(
-            ModuleClass => new ModuleClass(this.overlay, this.img, this.options, this.onUpdate),
+            ModuleClass => new ModuleClass(this),
         );
 
         this.modules.forEach(
@@ -60,7 +62,8 @@ class ImageResize {
         this.onUpdate();
     };
 
-    onUpdate = () => {
+    onUpdate = (evt) => {
+    	console.log('onUpdate', evt ? evt.type : 'none');
         this.repositionElements();
         this.modules.forEach(
             (module) => {
@@ -122,7 +125,7 @@ class ImageResize {
         this.overlay = document.createElement('div');
         Object.assign(this.overlay.style, this.options.overlayStyles);
 
-        document.body.appendChild(this.overlay);
+        this.quill.root.parentNode.appendChild(this.overlay);
 
         this.repositionElements();
     };
@@ -133,7 +136,7 @@ class ImageResize {
         }
 
         // Remove the overlay
-        document.body.removeChild(this.overlay);
+		this.quill.root.parentNode.removeChild(this.overlay);
         this.overlay = undefined;
 
         // stop listening for image deletion or movement
@@ -150,13 +153,16 @@ class ImageResize {
         }
 
         // position the overlay over the image
-        const rect = this.img.getBoundingClientRect();
+		const parent = this.quill.root.parentNode;
+        const imgRect = this.img.getBoundingClientRect();
+        const containerRect = parent.getBoundingClientRect();
+        // console.log(imgRect.left,containerRect.top,window.scrollY, imgRect.left - containerRect.top + window.scrollY)
 
         Object.assign(this.overlay.style, {
-            left: `${rect.left + window.pageXOffset}px`,
-            top: `${rect.top + window.pageYOffset}px`,
-            width: `${rect.width}px`,
-            height: `${rect.height}px`,
+            left: `${imgRect.left - containerRect.left + window.scrollX - 1 + parent.scrollLeft}px`,
+            top: `${imgRect.top - containerRect.top + window.scrollY + parent.scrollTop}px`,
+            width: `${imgRect.width}px`,
+            height: `${imgRect.height}px`,
         });
     };
 

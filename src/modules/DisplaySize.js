@@ -29,19 +29,15 @@ export default class DisplaySize extends BaseModule {
         if (size[0] > 120 && size[1] > 30) {
             // position on top of image
             Object.assign(this.display.style, {
-                top: 'initial',
-                left: 'initial',
-                bottom: 0,
-                right: 0,
+                right: '4px',
+                bottom: '4px',
             });
         } else {
-            // position off top right
+            // position off bottom right
             const dispRect = this.display.getBoundingClientRect();
             Object.assign(this.display.style, {
-                top: 0,
-                right: `-${dispRect.width}px`,
-                left: 'initial',
-                bottom: 'initial',
+                right: `-${dispRect.width + 4}px`,
+                bottom: `-${dispRect.height + 4}px`,
             });
         }
     };

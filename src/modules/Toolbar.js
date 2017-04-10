@@ -1,156 +1,101 @@
 import IconAlignLeft from 'quill/assets/icons/align-left.svg';
-import IconAlignRight from 'quill/assets/icons/align-right.svg';
 import IconAlignCenter from 'quill/assets/icons/align-center.svg';
+import IconAlignRight from 'quill/assets/icons/align-right.svg';
 import BaseModule from './BaseModule';
+
+const Parchment = window.Quill.imports.parchment;
+const FloatStyle = new Parchment.Attributor.Style('float', 'float');
+const MarginStyle = new Parchment.Attributor.Style('margin', 'margin');
+const DisplayStyle = new Parchment.Attributor.Style('display', 'display');
 
 export default class Toolbar extends BaseModule {
     onCreate = () => {
+    	// Setup Toolbar
         this.toolbar = document.createElement('div');
-
-        this.addToolbarButtons();
-
-        // Apply styles
         Object.assign(this.toolbar.style, this.options.toolbarStyles);
-
-        // Attach it
         this.overlay.appendChild(this.toolbar);
+
+        // Setup Buttons
+		this._defineAlignments();
+		this._addToolbarButtons();
     };
 
-    onDestroy = () => {
-        if (this.toolbar) {
-            this.toolbar.parentNode.removeChild(this.toolbar);
-        }
-        this.toolbar = undefined;
+	// The toolbar and its children will be destroyed when the overlay is removed
+	onDestroy = () => {};
+
+	// Nothing to update on drag because we are are positioned relative to the overlay
+	onUpdate = () => {};
+
+    _defineAlignments = () => {
+		this.alignments = [
+			{
+				icon: IconAlignLeft,
+				apply: () => {
+					DisplayStyle.add(this.img, 'inline');
+					FloatStyle.add(this.img, 'left');
+					MarginStyle.add(this.img, '0 1em 1em 0');
+				},
+				isApplied: () => FloatStyle.value(this.img) == 'left',
+			},
+			{
+				icon: IconAlignCenter,
+				apply: () => {
+					DisplayStyle.add(this.img, 'block');
+					FloatStyle.remove(this.img);
+					MarginStyle.add(this.img, 'auto');
+				},
+				isApplied: () => MarginStyle.value(this.img) == 'auto',
+			},
+			{
+				icon: IconAlignRight,
+				apply: () => {
+					DisplayStyle.add(this.img, 'inline');
+					FloatStyle.add(this.img, 'right');
+					MarginStyle.add(this.img, '0 0 1em 1em');
+				},
+				isApplied: () => FloatStyle.value(this.img) == 'right',
+			},
+		];
+	};
+
+    _addToolbarButtons = () => {
+    	const buttons = [];
+    	this.alignments.forEach((alignment, idx) => {
+			const button = document.createElement('span');
+			buttons.push(button);
+			button.innerHTML = alignment.icon;
+			button.addEventListener('click', () => {
+				// deselect all buttons
+				buttons.forEach(button => button.style.filter = '');
+				if (alignment.isApplied()) {
+					// If applied, unapply
+					FloatStyle.remove(this.img);
+					MarginStyle.remove(this.img);
+					DisplayStyle.remove(this.img);
+				}
+				else {
+					// otherwise, select button and apply
+					this._selectButton(button);
+					alignment.apply();
+				}
+				// image may change position; redraw drag handles
+				this.requestUpdate();
+			});
+			Object.assign(button.style, this.options.toolbarButtonStyles);
+			if (idx > 0) {
+				button.style.borderLeftWidth = '0';
+			}
+			Object.assign(button.children[0].style, this.options.toolbarButtonSvgStyles);
+			if (alignment.isApplied()) {
+				// select button if previously applied
+				this._selectButton(button);
+			}
+			this.toolbar.appendChild(button);
+		});
     };
 
-    onUpdate = () => {
-        if (!this.toolbar || !this.img) {
-            return;
-        }
+    _selectButton = (button) => {
+		button.style.filter = 'invert(20%)';
+	};
 
-        const dispRect = this.toolbar.getBoundingClientRect();
-
-        Object.assign(this.toolbar.style, {
-            left: '16px',
-            bottom: `${-dispRect.height}px`,
-        });
-    };
-
-    addToolbarButtons = () => {
-        this.addAlignLeft();
-        this.addAlignCenter();
-        this.addAlignRight();
-    };
-
-    addAlignLeft = () => {
-        if (this.options.toolbarButtons.alignLeft === false) {
-            return;
-        }
-
-        const button = document.createElement('button');
-        button.innerHTML = IconAlignLeft;
-        button.onclick = this.onAlignLeft;
-        Object.assign(button.style, this.options.toolbarButtonStyles.alignLeft);
-        Object.assign(button.getElementsByTagName('svg')[0].style, this.options.toolbarButtonSvgStyles);
-
-        if (this.img.getAttribute('data-align') === 'left') {
-            this.styleButtonAsSelected(button);
-        }
-
-        this.toolbar.appendChild(button);
-    };
-
-    onAlignLeft = (evt) => {
-        if (this.img.getAttribute('data-align') === 'left') {
-            this.clearAlignmentStyles();
-            return;
-        }
-
-        this.clearAlignmentStyles();
-        this.styleButtonAsSelected(evt.currentTarget);
-        this.img.style.float = 'left';
-        this.img.setAttribute('data-align', 'left');
-        this.requestUpdate();
-    };
-
-    addAlignRight = () => {
-        if (this.options.toolbarButtons.alignRight === false) {
-            return;
-        }
-
-        const button = document.createElement('button');
-        button.innerHTML = IconAlignRight;
-        button.onclick = this.onAlignRight;
-        Object.assign(button.style, this.options.toolbarButtonStyles.alignRight);
-        Object.assign(button.getElementsByTagName('svg')[0].style, this.options.toolbarButtonSvgStyles);
-
-        if (this.img.getAttribute('data-align') === 'right') {
-            this.styleButtonAsSelected(button);
-        }
-
-        this.toolbar.appendChild(button);
-    };
-
-    onAlignRight = (evt) => {
-        if (this.img.getAttribute('data-align') === 'right') {
-            this.clearAlignmentStyles();
-            return;
-        }
-
-        this.clearAlignmentStyles();
-        this.styleButtonAsSelected(evt.currentTarget);
-        this.img.style.float = 'right';
-        this.img.setAttribute('data-align', 'right');
-        this.requestUpdate();
-    };
-
-    addAlignCenter = () => {
-        if (this.options.toolbarButtons.alignCenter === false) {
-            return;
-        }
-
-        const button = document.createElement('button');
-        button.innerHTML = IconAlignCenter;
-        button.onclick = this.onAlignCenter;
-        Object.assign(button.style, this.options.toolbarButtonStyles.alignCenter);
-        Object.assign(button.getElementsByTagName('svg')[0].style, this.options.toolbarButtonSvgStyles);
-
-        if (this.img.getAttribute('data-align') === 'center') {
-            this.styleButtonAsSelected(button);
-        }
-
-        this.toolbar.appendChild(button);
-    };
-
-    onAlignCenter = (evt) => {
-        if (this.img.getAttribute('data-align') === 'center') {
-            this.clearAlignmentStyles();
-            return;
-        }
-
-        this.clearAlignmentStyles();
-        this.styleButtonAsSelected(evt.currentTarget);
-        this.img.style.display = 'block';
-        this.img.style.margin = 'auto';
-        this.img.setAttribute('data-align', 'center');
-        this.requestUpdate();
-    };
-
-    styleButtonAsSelected = (button) => {
-        button.style.filter = 'invert(10%)';    // eslint-disable-line no-param-reassign
-    };
-
-    clearAlignmentStyles = () => {
-        Array.prototype.forEach.call(
-            this.toolbar.getElementsByTagName('button'),
-            (button) => {
-                button.style.filter = '';   // eslint-disable-line no-param-reassign
-            },
-        );
-        this.img.style.display = 'inline-block';
-        this.img.style.margin = '';
-        this.img.style.float = '';
-        this.img.removeAttribute('data-align');
-        this.requestUpdate();
-    };
 }
