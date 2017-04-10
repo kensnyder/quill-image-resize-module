@@ -39,6 +39,7 @@ export default {
         top: '-16px',
         right: '0',
         left: '0',
+        height: '0',
         minWidth: '100px',
         font: '12px/1.0 Arial, Helvetica, sans-serif',
         textAlign: 'center',

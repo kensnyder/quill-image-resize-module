@@ -31,13 +31,25 @@ export default class DisplaySize extends BaseModule {
             Object.assign(this.display.style, {
                 right: '4px',
                 bottom: '4px',
+				left: 'auto',
             });
-        } else {
+        }
+        else if (this.img.style.float == 'right') {
+			// position off bottom left
+			const dispRect = this.display.getBoundingClientRect();
+			Object.assign(this.display.style, {
+				right: 'auto',
+				bottom: `-${dispRect.height + 4}px`,
+				left: `-${dispRect.width + 4}px`,
+			});
+		}
+        else {
             // position off bottom right
             const dispRect = this.display.getBoundingClientRect();
             Object.assign(this.display.style, {
                 right: `-${dispRect.width + 4}px`,
                 bottom: `-${dispRect.height + 4}px`,
+				left: 'auto',
             });
         }
     };

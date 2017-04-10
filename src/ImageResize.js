@@ -114,6 +114,8 @@ class ImageResize {
             this.hideOverlay();
         }
 
+        this.quill.setSelection(null);
+
         // prevent spurious text selection
         this.setUserSelect('none');
 
@@ -156,11 +158,10 @@ class ImageResize {
 		const parent = this.quill.root.parentNode;
         const imgRect = this.img.getBoundingClientRect();
         const containerRect = parent.getBoundingClientRect();
-        // console.log(imgRect.left,containerRect.top,window.scrollY, imgRect.left - containerRect.top + window.scrollY)
 
         Object.assign(this.overlay.style, {
-            left: `${imgRect.left - containerRect.left + window.scrollX - 1 + parent.scrollLeft}px`,
-            top: `${imgRect.top - containerRect.top + window.scrollY + parent.scrollTop}px`,
+            left: `${imgRect.left - containerRect.left - 1 + parent.scrollLeft}px`,
+            top: `${imgRect.top - containerRect.top + parent.scrollTop}px`,
             width: `${imgRect.width}px`,
             height: `${imgRect.height}px`,
         });
@@ -185,8 +186,11 @@ class ImageResize {
         });
     };
 
-    checkImage = () => {
-        if (this.img) {
+    checkImage = (evt) => {
+    	if (this.img) {
+			if (evt.keyCode == 46 || evt.keyCode == 8) {
+				Quill.find(this.img).deleteAt(0);
+			}
             this.hide();
         }
     };
