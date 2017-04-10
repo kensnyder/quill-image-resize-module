@@ -1,17 +1,17 @@
 import { defaultsDeep } from 'lodash';
 import DefaultOptions from './DefaultOptions';
+import { DisplaySize } from './modules/DisplaySize';
+import { Toolbar } from './modules/Toolbar';
+import { Resize } from './modules/Resize';
 
-export { default as BaseModule } from './modules/BaseModule';
-export { default as DisplaySize } from './modules/DisplaySize';
-export { default as Toolbar } from './modules/Toolbar';
-export { default as Resize } from './modules/Resize';
+const knownModules = { DisplaySize, Toolbar, Resize };
 
 /**
  * Custom module for quilljs to allow user to resize <img> elements
  * (Works on Chrome, Edge, Safari and replaces Firefox's native resize behavior)
  * @see https://quilljs.com/blog/building-a-custom-module/
  */
-class ImageResize {
+export default class ImageResize {
 
     constructor(quill, options = {}) {
         // save the quill reference and options
@@ -42,6 +42,7 @@ class ImageResize {
 
         // setup modules
         this.moduleClasses = this.options.modules;
+        console.log('this.options.modules', this.options.modules);
 
         this.modules = [];
     }
@@ -50,7 +51,7 @@ class ImageResize {
         this.removeModules();
 
         this.modules = this.moduleClasses.map(
-            ModuleClass => new ModuleClass(this),
+            ModuleClass => new (knownModules[ModuleClass] || ModuleClass)(this),
         );
 
         this.modules.forEach(
@@ -62,8 +63,7 @@ class ImageResize {
         this.onUpdate();
     };
 
-    onUpdate = (evt) => {
-    	console.log('onUpdate', evt ? evt.type : 'none');
+    onUpdate = () => {
         this.repositionElements();
         this.modules.forEach(
             (module) => {
@@ -187,16 +187,14 @@ class ImageResize {
     };
 
     checkImage = (evt) => {
-    	if (this.img) {
-        if (evt.keyCode == 46 || evt.keyCode == 8) {
-            Quill.find(this.img).deleteAt(0);
+        if (this.img) {
+            if (evt.keyCode == 46 || evt.keyCode == 8) {
+                window.Quill.find(this.img).deleteAt(0);
+            }
+            this.hide();
         }
-        this.hide();
-    }
     };
 }
-
-export default ImageResize;
 
 if (window.Quill) {
     window.Quill.register('modules/imageResize', ImageResize);

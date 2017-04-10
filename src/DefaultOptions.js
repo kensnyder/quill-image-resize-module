@@ -1,12 +1,8 @@
-import DisplaySize from './modules/DisplaySize';
-import Toolbar from './modules/Toolbar';
-import Resize from './modules/Resize';
-
 export default {
     modules: [
-        DisplaySize,
-        Toolbar,
-        Resize,
+        'DisplaySize',
+        'Toolbar',
+        'Resize',
     ],
     overlayStyles: {
         position: 'absolute',
@@ -15,8 +11,8 @@ export default {
     },
     handleStyles: {
         position: 'absolute',
-        height: 12,
-        width: 12,
+        height: '12px',
+        width: '12px',
         backgroundColor: 'white',
         border: '1px solid #777',
         boxSizing: 'border-box',
@@ -36,7 +32,7 @@ export default {
     },
     toolbarStyles: {
         position: 'absolute',
-        top: '-16px',
+        top: '-12px',
         right: '0',
         left: '0',
         height: '0',
@@ -48,16 +44,16 @@ export default {
         cursor: 'default',
     },
     toolbarButtonStyles: {
-		display: 'inline-block',
-		width: '24px',
-		height: '24px',
-		background: 'white',
-		border: '1px solid #999',
-		verticalAlign: 'middle',
+        display: 'inline-block',
+        width: '24px',
+        height: '24px',
+        background: 'white',
+        border: '1px solid #999',
+        verticalAlign: 'middle',
     },
     toolbarButtonSvgStyles: {
-		fill: '#444',
-		stroke: '#444',
-		strokeWidth: '2',
+        fill: '#444',
+        stroke: '#444',
+        strokeWidth: '2',
     },
 };

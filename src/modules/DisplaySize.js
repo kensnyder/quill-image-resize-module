@@ -1,6 +1,6 @@
-import BaseModule from './BaseModule';
+import { BaseModule } from './BaseModule';
 
-export default class DisplaySize extends BaseModule {
+export class DisplaySize extends BaseModule {
     onCreate = () => {
         // Create the container to hold the size display
         this.display = document.createElement('div');
@@ -12,12 +12,7 @@ export default class DisplaySize extends BaseModule {
         this.overlay.appendChild(this.display);
     };
 
-    onDestroy = () => {
-        if (this.display) {
-            this.display.parentNode.removeChild(this.display);
-        }
-        this.display = undefined;
-    };
+    onDestroy = () => {};
 
     onUpdate = () => {
         if (!this.display || !this.img) {
@@ -33,7 +28,8 @@ export default class DisplaySize extends BaseModule {
                 bottom: '4px',
                 left: 'auto',
             });
-        } else if (this.img.style.float == 'right') {
+        }
+        else if (this.img.style.float == 'right') {
 			// position off bottom left
             const dispRect = this.display.getBoundingClientRect();
             Object.assign(this.display.style, {
@@ -41,7 +37,8 @@ export default class DisplaySize extends BaseModule {
                 bottom: `-${dispRect.height + 4}px`,
                 left: `-${dispRect.width + 4}px`,
             });
-        } else {
+        }
+        else {
             // position off bottom right
             const dispRect = this.display.getBoundingClientRect();
             Object.assign(this.display.style, {

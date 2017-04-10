@@ -24,7 +24,7 @@ const quill = new Quill(editor, {
     modules: {
         // ...
         imageResize: {
-            // See "config" below
+            // See optional "config" below
         }
     }
 });
@@ -44,7 +44,7 @@ var quill = new Quill(editor, {
     modules: {
         // ...
         ImageResize: {
-            // See "config" below
+            // See optional "config" below
         }
     }
 });
@@ -63,24 +63,22 @@ var quill = new Quill(editor, {
 });
 ```
 
-Functionality is broken down into modules, which can be mixed and matched as you like.  For example, if you
-want to explicitly include all the currently available modules, you could do:
+Functionality is broken down into modules, which can be mixed and matched as you like. For example,
+the default is to include all modules:
 
 ```javascript
-import { DisplaySize, Toolbar, Resize } from 'quill-image-resize-module';
-
 const quill = new Quill(editor, {
     // ...
     modules: {
         // ...
         ImageResize: {
-            modules: [ Resize, DisplaySize, Toolbar ]   // ALL THE MODULES
+            modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
         }
     }
 });
 ```
 
-Each module will be described below.
+Each module is described below.
 
 #### `Resize` - Resize the image
 
@@ -150,15 +148,10 @@ var quill = new Quill(editor, {
                 // other camelCase styles for size display
             },
             toolbarButtonStyles: {
-                alignLeft: {
-                    // ...
-                },
-                alignCenter: {
-                    // ...
-                },
-                alignRight: {
-                    // ...
-                }
+                // ...
+            },
+            toolbarButtonSvgStyles: {
+                // ...
             },
         }
     }
