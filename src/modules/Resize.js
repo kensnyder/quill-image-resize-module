@@ -15,15 +15,8 @@ export class Resize extends BaseModule {
     };
 
     onDestroy = () => {
-        // remove boxes
-        this.boxes.forEach(box => box.parentNode.removeChild(box));
+        // reset drag handle cursors
         this.setCursor('');
-
-        // release memory
-        this.dragBox = undefined;
-        this.dragStartX = undefined;
-        this.preDragWidth = undefined;
-        this.boxes = [];
     };
 
     positionBoxes = () => {
