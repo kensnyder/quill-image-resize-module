@@ -1,9 +1,9 @@
-export default class BaseModule {
-    constructor(overlay, img, options, requestUpdate) {
-        this.overlay = overlay;
-        this.img = img;
-        this.options = options;
-        this.requestUpdate = requestUpdate;
+export class BaseModule {
+    constructor(resizer) {
+        this.overlay = resizer.overlay;
+        this.img = resizer.img;
+        this.options = resizer.options;
+        this.requestUpdate = resizer.onUpdate;
     }
     /*
         requestUpdate (passed in by the library during construction, above) can be used to let the library know that

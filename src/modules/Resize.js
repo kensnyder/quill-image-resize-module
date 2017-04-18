@@ -1,6 +1,6 @@
-import BaseModule from './BaseModule';
+import { BaseModule } from './BaseModule';
 
-export default class Resize extends BaseModule {
+export class Resize extends BaseModule {
     onCreate = () => {
         // track resize handles
         this.boxes = [];
@@ -15,20 +15,13 @@ export default class Resize extends BaseModule {
     };
 
     onDestroy = () => {
-        // remove boxes
-        this.boxes.forEach(box => box.parentNode.removeChild(box));
+        // reset drag handle cursors
         this.setCursor('');
-
-        // release memory
-        this.dragBox = undefined;
-        this.dragStartX = undefined;
-        this.preDragWidth = undefined;
-        this.boxes = [];
     };
 
     positionBoxes = () => {
-        const handleXOffset = `${-this.options.handleStyles.width / 2}px`;
-        const handleYOffset = `${-this.options.handleStyles.height / 2}px`;
+        const handleXOffset = `${-parseFloat(this.options.handleStyles.width) / 2}px`;
+        const handleYOffset = `${-parseFloat(this.options.handleStyles.height) / 2}px`;
 
         // set the top and left for each drag handle
         [

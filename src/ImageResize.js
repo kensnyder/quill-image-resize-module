@@ -1,17 +1,17 @@
-import { defaultsDeep } from 'lodash';
+import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
+import { DisplaySize } from './modules/DisplaySize';
+import { Toolbar } from './modules/Toolbar';
+import { Resize } from './modules/Resize';
 
-export { default as BaseModule } from './modules/BaseModule';
-export { default as DisplaySize } from './modules/DisplaySize';
-export { default as Toolbar } from './modules/Toolbar';
-export { default as Resize } from './modules/Resize';
+const knownModules = { DisplaySize, Toolbar, Resize };
 
 /**
  * Custom module for quilljs to allow user to resize <img> elements
  * (Works on Chrome, Edge, Safari and replaces Firefox's native resize behavior)
  * @see https://quilljs.com/blog/building-a-custom-module/
  */
-class ImageResize {
+export default class ImageResize {
 
     constructor(quill, options = {}) {
         // save the quill reference and options
@@ -38,8 +38,11 @@ class ImageResize {
         // respond to clicks inside the editor
         this.quill.root.addEventListener('click', this.handleClick, false);
 
+        this.quill.root.parentNode.style.position = this.quill.root.parentNode.style.position || 'relative';
+
         // setup modules
         this.moduleClasses = this.options.modules;
+        console.log('this.options.modules', this.options.modules);
 
         this.modules = [];
     }
@@ -48,7 +51,7 @@ class ImageResize {
         this.removeModules();
 
         this.modules = this.moduleClasses.map(
-            ModuleClass => new ModuleClass(this.overlay, this.img, this.options, this.onUpdate),
+            ModuleClass => new (knownModules[ModuleClass] || ModuleClass)(this),
         );
 
         this.modules.forEach(
@@ -111,6 +114,8 @@ class ImageResize {
             this.hideOverlay();
         }
 
+        this.quill.setSelection(null);
+
         // prevent spurious text selection
         this.setUserSelect('none');
 
@@ -122,7 +127,7 @@ class ImageResize {
         this.overlay = document.createElement('div');
         Object.assign(this.overlay.style, this.options.overlayStyles);
 
-        document.body.appendChild(this.overlay);
+        this.quill.root.parentNode.appendChild(this.overlay);
 
         this.repositionElements();
     };
@@ -133,7 +138,7 @@ class ImageResize {
         }
 
         // Remove the overlay
-        document.body.removeChild(this.overlay);
+        this.quill.root.parentNode.removeChild(this.overlay);
         this.overlay = undefined;
 
         // stop listening for image deletion or movement
@@ -150,13 +155,15 @@ class ImageResize {
         }
 
         // position the overlay over the image
-        const rect = this.img.getBoundingClientRect();
+        const parent = this.quill.root.parentNode;
+        const imgRect = this.img.getBoundingClientRect();
+        const containerRect = parent.getBoundingClientRect();
 
         Object.assign(this.overlay.style, {
-            left: `${rect.left + window.pageXOffset}px`,
-            top: `${rect.top + window.pageYOffset}px`,
-            width: `${rect.width}px`,
-            height: `${rect.height}px`,
+            left: `${imgRect.left - containerRect.left - 1 + parent.scrollLeft}px`,
+            top: `${imgRect.top - containerRect.top + parent.scrollTop}px`,
+            width: `${imgRect.width}px`,
+            height: `${imgRect.height}px`,
         });
     };
 
@@ -179,14 +186,15 @@ class ImageResize {
         });
     };
 
-    checkImage = () => {
+    checkImage = (evt) => {
         if (this.img) {
+            if (evt.keyCode == 46 || evt.keyCode == 8) {
+                window.Quill.find(this.img).deleteAt(0);
+            }
             this.hide();
         }
     };
 }
-
-export default ImageResize;
 
 if (window.Quill) {
     window.Quill.register('modules/imageResize', ImageResize);

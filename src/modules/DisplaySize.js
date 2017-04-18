@@ -1,6 +1,6 @@
-import BaseModule from './BaseModule';
+import { BaseModule } from './BaseModule';
 
-export default class DisplaySize extends BaseModule {
+export class DisplaySize extends BaseModule {
     onCreate = () => {
         // Create the container to hold the size display
         this.display = document.createElement('div');
@@ -12,12 +12,7 @@ export default class DisplaySize extends BaseModule {
         this.overlay.appendChild(this.display);
     };
 
-    onDestroy = () => {
-        if (this.display) {
-            this.display.parentNode.removeChild(this.display);
-        }
-        this.display = undefined;
-    };
+    onDestroy = () => {};
 
     onUpdate = () => {
         if (!this.display || !this.img) {
@@ -29,19 +24,27 @@ export default class DisplaySize extends BaseModule {
         if (size[0] > 120 && size[1] > 30) {
             // position on top of image
             Object.assign(this.display.style, {
-                top: 'initial',
-                left: 'initial',
-                bottom: 0,
-                right: 0,
+                right: '4px',
+                bottom: '4px',
+                left: 'auto',
             });
-        } else {
-            // position off top right
+        }
+        else if (this.img.style.float == 'right') {
+			// position off bottom left
             const dispRect = this.display.getBoundingClientRect();
             Object.assign(this.display.style, {
-                top: 0,
-                right: `-${dispRect.width}px`,
-                left: 'initial',
-                bottom: 'initial',
+                right: 'auto',
+                bottom: `-${dispRect.height + 4}px`,
+                left: `-${dispRect.width + 4}px`,
+            });
+        }
+        else {
+            // position off bottom right
+            const dispRect = this.display.getBoundingClientRect();
+            Object.assign(this.display.style, {
+                right: `-${dispRect.width + 4}px`,
+                bottom: `-${dispRect.height + 4}px`,
+                left: 'auto',
             });
         }
     };
