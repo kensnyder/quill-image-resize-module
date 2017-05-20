@@ -42,7 +42,6 @@ export default class ImageResize {
 
         // setup modules
         this.moduleClasses = this.options.modules;
-        console.log('this.options.modules', this.options.modules);
 
         this.modules = [];
     }
