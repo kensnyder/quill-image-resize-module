@@ -2,7 +2,7 @@ import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
 
 const attributes = {
-    proxyId: 'data-video-proxy-id',
+    proxyId: 'data-iframe-proxy-id',
     dataAlign: 'data-align',
 };
 
