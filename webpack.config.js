@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-    entry: "./src/ImageResize.js",
+    entry: "./src/index.js",
     output: {
         path: __dirname,
         library: 'ImageResize',
