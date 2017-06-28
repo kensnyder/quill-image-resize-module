@@ -42,6 +42,7 @@ export default {
         color: '#333',
         boxSizing: 'border-box',
         cursor: 'default',
+        zIndex: '1',
     },
     toolbarButtonStyles: {
         display: 'inline-block',

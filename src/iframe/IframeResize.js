@@ -1,6 +1,6 @@
 import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
-import alignments, { clearAlignmentStyles, clearAlignmentData, getCurrentAlignment } from '../alignments';
+import { clearAlignmentStyles, clearAlignmentData, getCurrentAlignment } from '../alignments';
 
 const attributes = {
     proxyId: 'data-iframe-proxy-id',
@@ -128,13 +128,16 @@ export default class IframeResize {
 
         this.removeMouseEnterListener(iframe);
 
-        Object.assign(proxyImage.style, {
-            position: 'absolute',
-            margin: '0',
-            left: `${rect.left + window.pageXOffset}px`,
-            top: `${rect.top + window.pageYOffset}px`,
-            zIndex: 10,
-        });
+        Object.assign(
+            proxyImage.style,
+            {
+                position: 'absolute',
+                margin: '0',
+                left: `${rect.left + window.pageXOffset}px`,
+                top: `${rect.top + window.pageYOffset}px`,
+            },
+            this.options.proxyImageStyle
+        );
 
         proxyImage.width = rect.width;
         this.addMouseEnterListener(iframe);
