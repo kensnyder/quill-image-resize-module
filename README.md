@@ -183,3 +183,30 @@ var quill = new Quill(editor, {
     }
 });
 ```
+
+### `IframeResize`
+In addition to resizing images it's also possible to allow users to resize `iframe` elements. To do this you must include the `IframeResize` module **in addition** to the `ImageResize` module:
+
+```javascript
+import Quill from 'quill';
+import ImageResize, { IframeResize } from 'quill-image-resize-module';
+
+Quill.register('modules/imageResize', ImageResize);
+Quill.register('modules/iframeResize', IframeResize);
+
+const quill = new Quill(editor, {
+    // ...
+    modules: {
+        // ...
+        imageResize: {},
+        iframeResize: {
+            // see config below
+        }
+    }
+});
+```
+
+#### supported `iframeResize` options
+* iframeSelector - the selector to use when searching for iframes within quill (defaults to `.ql-video`)
+* proxyImageClass - the class for generated proxy images used to pass alone resize/realignment info (defaults to `.iframe-resize-proxy-image`)
+* proxyImageStyle - custom styling applied to the proxy images (default `{}`)
