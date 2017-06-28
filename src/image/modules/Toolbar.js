@@ -1,5 +1,5 @@
 import { BaseModule } from './BaseModule';
-import alignments, { clearAlignmentStyles } from '../../alignments';
+import alignments, { clearAlignmentData } from '../../alignments';
 
 export class Toolbar extends BaseModule {
     onCreate = () => {
@@ -29,7 +29,7 @@ export class Toolbar extends BaseModule {
 				buttons.forEach(button => button.style.filter = '');
 				if (alignment.isApplied(this.img)) {
 						// If applied, unapply
-                    clearAlignmentStyles(this.img);
+                    clearAlignmentData(this.img);
 				} else {
 						// otherwise, select button and apply
 					this._selectButton(button);

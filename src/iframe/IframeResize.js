@@ -1,9 +1,10 @@
 import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
-import alignments, { clearAlignmentStyles, getCurrentAlignment } from '../alignments';
+import alignments, { clearAlignmentStyles, clearAlignmentData, getCurrentAlignment } from '../alignments';
 
 const attributes = {
     proxyId: 'data-iframe-proxy-id',
+    align: 'data-align',
 };
 
 export default class IframeResize {
@@ -47,7 +48,13 @@ export default class IframeResize {
     };
 
     handleVideoMouseEnter = (evt) => {
-        const proxyImage = this.createProxyImage(evt.target);
+        const iframe = evt.target;
+        let proxyImage = this.getProxyImageForIframe(iframe);
+
+        if (!proxyImage) {
+            proxyImage = this.createProxyImage(iframe);
+        }
+
         this.repositionProxyImage(proxyImage);
         document.body.appendChild(proxyImage);
         this.observe(proxyImage);
@@ -68,8 +75,8 @@ export default class IframeResize {
 
             if (mutation.attributeName === 'width') {
                 this.onProxyImageWidthChange(proxyImage, iframe);
-            } else if (mutation.attributeName === 'style') {
-                this.onProxyImageStyleChange(proxyImage, iframe);
+            } else if (mutation.attributeName === attributes.align) {
+                this.onProxyImageAlignChange(proxyImage, iframe);
             }
 
             this.repositionProxyImage(proxyImage);
@@ -82,14 +89,15 @@ export default class IframeResize {
         iframe.width = proxyImage.width;
     };
 
-    onProxyImageStyleChange = (proxyImage, iframe) => {
-        const currentAlignment = getCurrentAlignment(proxyImage);
-        clearAlignmentStyles(iframe);
+    onProxyImageAlignChange = (proxyImage, iframe) => {
+        const nextIframeAlignment = getCurrentAlignment(proxyImage);
+        clearAlignmentData(iframe);
 
-        if (currentAlignment !== null) {
-            currentAlignment.apply(iframe);
+        if (nextIframeAlignment !== null) {
+            nextIframeAlignment.apply(iframe);
         }
 
+        clearAlignmentStyles(proxyImage);
         this.repositionProxyImage(proxyImage);
         this.getImageResize().repositionElements();
     };
@@ -122,6 +130,7 @@ export default class IframeResize {
 
         Object.assign(proxyImage.style, {
             position: 'absolute',
+            margin: '0',
             left: `${rect.left + window.pageXOffset}px`,
             top: `${rect.top + window.pageYOffset}px`,
             zIndex: 10,
@@ -135,6 +144,7 @@ export default class IframeResize {
     addMouseEnterListener = iframe => iframe.addEventListener('mouseenter', this.handleVideoMouseEnter);
     observe = proxyImage => this.proxyImageObserver.observe(proxyImage, { attributes: true });
     getIframeForProxyImage = proxyImage => document.querySelector(`iframe[${attributes.proxyId}=${proxyImage.getAttribute(attributes.proxyId)}]`);
+    getProxyImageForIframe = iframe => document.querySelector(`img[${attributes.proxyId}=${iframe.getAttribute(attributes.proxyId)}]`);
     getImageResize = () => this.quill.getModule('imageResize');
     removeProxyImages = () => Array.from(document.querySelectorAll(`.${this.options.proxyImageClass}`)).forEach(proxy => proxy.remove());
 }
