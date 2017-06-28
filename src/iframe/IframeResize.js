@@ -1,9 +1,9 @@
 import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
+import alignments, { clearAlignmentStyles, getCurrentAlignment } from '../alignments';
 
 const attributes = {
     proxyId: 'data-iframe-proxy-id',
-    dataAlign: 'data-align',
 };
 
 export default class IframeResize {
@@ -68,8 +68,8 @@ export default class IframeResize {
 
             if (mutation.attributeName === 'width') {
                 this.onProxyImageWidthChange(proxyImage, iframe);
-            } else if (mutation.attributeName === attributes.dataAlign) {
-                this.onProxyImageDataAlignChange(proxyImage, iframe);
+            } else if (mutation.attributeName === 'style') {
+                this.onProxyImageStyleChange(proxyImage, iframe);
             }
 
             this.repositionProxyImage(proxyImage);
@@ -82,9 +82,14 @@ export default class IframeResize {
         iframe.width = proxyImage.width;
     };
 
-    onProxyImageDataAlignChange = (proxyImage, iframe) => {
-        iframe.setAttribute(attributes.dataAlign, proxyImage.getAttribute(attributes.dataAlign));
-        // setVideoStyles(iframe, proxyImage.getAttribute(attributes.dataAlign));
+    onProxyImageStyleChange = (proxyImage, iframe) => {
+        const currentAlignment = getCurrentAlignment(proxyImage);
+        clearAlignmentStyles(iframe);
+
+        if (currentAlignment !== null) {
+            currentAlignment.apply(iframe);
+        }
+
         this.repositionProxyImage(proxyImage);
         this.getImageResize().repositionElements();
     };
