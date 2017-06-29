@@ -14,16 +14,25 @@ export default class IframeResize {
         this.proxyImageObserver = new MutationObserver(this.handleProxyImageMutations);
 
         this.quill.root.addEventListener('click', this.handleClick, false);
-        this.quill.root.addEventListener('input', this.removeProxyImages, true);
+        this.quill.root.addEventListener('input', this.handleInput, true);
         this.quill.on('text-change', this.handleTextChange);
 
-        document.addEventListener('keyup', this.removeProxyImages, true);
+        document.addEventListener('keyup', this.handleInput, true);
     }
 
     handleClick = (evt) => {
-        if (!evt.target || !evt.target.tagName || evt.target.tagName.toUpperCase() !== 'IMG') {
+        const isImage = evt.target && evt.target.tagName && evt.target.tagName === 'IMG';
+        if (!isImage || (isImage && !this.isProxyImage(evt.target))) {
             this.removeProxyImages();
         }
+    };
+
+    handleInput = (evt) => {
+        if (evt.keyCode === 46 || evt.keyCode === 8) {
+            this.deleteActiveIframes();
+        }
+
+        this.removeProxyImages();
     };
 
     handleTextChange = () => {
@@ -142,6 +151,20 @@ export default class IframeResize {
         this.addMouseEnterListener(iframe);
     };
 
+    deleteActiveIframes = () => {
+        Array.from(document.querySelectorAll(`img[${attributes.proxyId}]`)).forEach((proxyImage) => {
+            const iframe = this.getIframeForProxyImage(proxyImage);
+
+            if (iframe) {
+                const blot = window.Quill.find(iframe);
+                if (blot) {
+                    blot.deleteAt(0);
+                }
+            }
+        });
+    };
+
+    isProxyImage = img => img.hasAttribute(attributes.proxyId);
     removeMouseEnterListener = iframe => iframe.removeEventListener('mouseenter', this.handleVideoMouseEnter);
     addMouseEnterListener = iframe => iframe.addEventListener('mouseenter', this.handleVideoMouseEnter);
     observe = proxyImage => this.proxyImageObserver.observe(proxyImage, { attributes: true });
