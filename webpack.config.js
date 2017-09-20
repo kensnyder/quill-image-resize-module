@@ -4,7 +4,7 @@ module.exports = {
     entry: "./src/index.js",
     output: {
         path: __dirname,
-        library: 'ImageResize',
+        library: 'ImageResizeModule',
         libraryTarget: 'umd',
         filename: "image-resize.min.js"
     },
