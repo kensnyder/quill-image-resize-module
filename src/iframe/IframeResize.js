@@ -1,3 +1,4 @@
+import Quill from 'quill';
 import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
 import AlignmentHelper, { alignAttribute } from '../AlignmentHelper';
@@ -156,7 +157,7 @@ export default class IframeResize {
             const iframe = this.getIframeForProxyImage(proxyImage);
 
             if (iframe) {
-                const blot = window.Quill.find(iframe);
+                const blot = Quill.find(iframe);
                 if (blot) {
                     blot.deleteAt(0);
                 }

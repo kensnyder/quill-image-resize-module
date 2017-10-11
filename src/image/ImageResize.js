@@ -1,3 +1,4 @@
+import Quill from 'quill';
 import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
 import { DisplaySize } from './modules/DisplaySize';
@@ -188,7 +189,7 @@ export default class ImageResize {
     checkImage = (evt) => {
         if (this.img) {
             if (evt.keyCode === 46 || evt.keyCode === 8) {
-                const blot = window.Quill.find(this.img);
+                const blot = Quill.find(this.img);
                 if (blot) {
                     blot.deleteAt(0);
                 }
