@@ -1,9 +1,10 @@
+import Quill from 'quill';
+
 import IconAlignLeft from 'quill/assets/icons/align-left.svg';
 import IconAlignCenter from 'quill/assets/icons/align-center.svg';
 import IconAlignRight from 'quill/assets/icons/align-right.svg';
 
-const Parchment = window.Quill.imports.parchment;
-
+const Parchment = Quill.imports.parchment;
 const leftAlignName = 'left';
 const centerAlignName = 'center';
 const rightAlignName = 'right';
