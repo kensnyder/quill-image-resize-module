@@ -36,45 +36,47 @@ export default class AlignmentHelper {
 		};
 	}
 
-	isAligned = (el, alignType) => this.alignAttribute.value(el) === alignType;
+	isAligned(el, alignType) {
+		return this.alignAttribute.value(el) === alignType;
+	}
 
-	applyLeftAlign = (el) => {
+	applyLeftAlign(el) {
 		this.alignAttribute.add(el, leftAlignName);
 		this.displayStyle.add(el, 'inline');
 		this.floatStyle.add(el, 'left');
 		this.marginStyle.add(el, '0 1em 1em 0');
 	};
 
-	applyCenterAlign = (el) => {
+	applyCenterAlign(el) {
 		this.alignAttribute.add(el, centerAlignName);
 		this.displayStyle.add(el, 'block');
 		this.floatStyle.remove(el);
 		this.marginStyle.add(el, 'auto');
 	};
 
-	applyRightAlign = (el) => {
+	applyRightAlign(el) {
 		this.alignAttribute.add(el, rightAlignName);
 		this.displayStyle.add(el, 'inline');
 		this.floatStyle.add(el, 'right');
 		this.marginStyle.add(el, '0 0 1em 1em');
 	};
 
-	clearStyles = (el) => {
+	clearStyles(el) {
 		this.floatStyle.remove(el);
 		this.marginStyle.remove(el);
 		this.displayStyle.remove(el);
 	};
 
-	clearData = (el) => {
+	clearData(el) {
 		this.alignAttribute.remove(el);
 	};
 
-	clear = (el) => {
+	clear(el) {
 		this.clearStyles(el);
 		this.clearData(el);
 	};
 
-	getCurrentAlignment = (el) => {
+	getCurrentAlignment(el) {
 		for (const alignment of this.getAlignments()) {
 			if (alignment.isApplied(el)) {
 				return alignment;
@@ -84,7 +86,9 @@ export default class AlignmentHelper {
 		return null;
 	};
 
-    getAlignments = () => Object.keys(this.alignments).map(k => this.alignments[k]);
+    getAlignments() {
+    	return Object.keys(this.alignments).map(k => this.alignments[k]);
+	}
 }
 
 export const defaultAlignmentHelper = new AlignmentHelper();

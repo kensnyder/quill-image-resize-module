@@ -12,7 +12,6 @@ export default class IframeResize {
     constructor(quill, options = {}) {
         this.quill = quill;
         this.options = defaultsDeep({}, options, DefaultOptions);
-        this.alignmentHelper = this.options.alignmentHelper;
         this.proxyImageObserver = new MutationObserver(this.handleProxyImageMutations);
 
         this.quill.root.addEventListener('click', this.handleClick, false);
@@ -100,14 +99,15 @@ export default class IframeResize {
     };
 
     onProxyImageAlignChange = (proxyImage, iframe) => {
-        const nextIframeAlignment = this.alignmentHelper.getCurrentAlignment(proxyImage);
-        this.alignmentHelper.clear(iframe);
+    	const alignmentHelper = this.getAlignmentHelper();
+        const nextIframeAlignment = alignmentHelper.getCurrentAlignment(proxyImage);
+        alignmentHelper.clear(iframe);
 
         if (nextIframeAlignment !== null) {
             nextIframeAlignment.apply(iframe);
         }
 
-        this.alignmentHelper.clearStyles(proxyImage);
+        alignmentHelper.clearStyles(proxyImage);
         this.repositionProxyImage(proxyImage);
         this.getImageResize().repositionElements();
     };
@@ -166,6 +166,7 @@ export default class IframeResize {
         });
     };
 
+    getAlignmentHelper = () => this.getImageResize().options.alignmentHelper;
     isProxyImage = img => img.hasAttribute(attributes.proxyId);
     removeMouseEnterListener = iframe => iframe.removeEventListener('mouseenter', this.handleVideoMouseEnter);
     addMouseEnterListener = iframe => iframe.addEventListener('mouseenter', this.handleVideoMouseEnter);
