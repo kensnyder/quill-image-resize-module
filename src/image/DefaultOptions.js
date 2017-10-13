@@ -1,7 +1,9 @@
 import { defaultAlignmentHelper } from '../AlignmentHelper';
+import { defaultDeleteHelper } from "../DeleteHelper";
 
 export default {
     alignmentHelper: defaultAlignmentHelper,
+	deleteHelper: defaultDeleteHelper,
     modules: [
         'DisplaySize',
         'Toolbar',

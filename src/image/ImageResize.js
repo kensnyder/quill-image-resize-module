@@ -189,10 +189,7 @@ export default class ImageResize {
     checkImage = (evt) => {
         if (this.img) {
             if (evt.keyCode === 46 || evt.keyCode === 8) {
-                const blot = Quill.find(this.img);
-                if (blot) {
-                    blot.deleteAt(0);
-                }
+            	this.options.deleteHelper.deleteBlot(this.img);
             }
             this.hide();
         }

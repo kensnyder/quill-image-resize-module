@@ -158,15 +158,13 @@ export default class IframeResize {
             const iframe = this.getIframeForProxyImage(proxyImage);
 
             if (iframe) {
-                const blot = Quill.find(iframe);
-                if (blot) {
-                    blot.deleteAt(0);
-                }
+                this.getDeleteHelper().deleteBlot(iframe);
             }
         });
     };
 
     getAlignmentHelper = () => this.getImageResize().options.alignmentHelper;
+    getDeleteHelper = () => this.getImageResize().options.deleteHelper;
     isProxyImage = img => img.hasAttribute(attributes.proxyId);
     removeMouseEnterListener = iframe => iframe.removeEventListener('mouseenter', this.handleVideoMouseEnter);
     addMouseEnterListener = iframe => iframe.addEventListener('mouseenter', this.handleVideoMouseEnter);
