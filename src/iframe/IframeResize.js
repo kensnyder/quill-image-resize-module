@@ -1,7 +1,7 @@
 import Quill from 'quill';
 import defaultsDeep from 'lodash/defaultsDeep';
 import DefaultOptions from './DefaultOptions';
-import AlignmentHelper, { alignAttribute } from '../AlignmentHelper';
+import { alignAttribute } from '../AlignmentHelper';
 
 const attributes = {
     proxyId: 'data-iframe-proxy-id',
@@ -12,6 +12,7 @@ export default class IframeResize {
     constructor(quill, options = {}) {
         this.quill = quill;
         this.options = defaultsDeep({}, options, DefaultOptions);
+        this.alignmentHelper = this.options.alignmentHelper;
         this.proxyImageObserver = new MutationObserver(this.handleProxyImageMutations);
 
         this.quill.root.addEventListener('click', this.handleClick, false);
@@ -99,14 +100,14 @@ export default class IframeResize {
     };
 
     onProxyImageAlignChange = (proxyImage, iframe) => {
-        const nextIframeAlignment = AlignmentHelper.getCurrentAlignment(proxyImage);
-        AlignmentHelper.clear(iframe);
+        const nextIframeAlignment = this.alignmentHelper.getCurrentAlignment(proxyImage);
+        this.alignmentHelper.clear(iframe);
 
         if (nextIframeAlignment !== null) {
             nextIframeAlignment.apply(iframe);
         }
 
-        AlignmentHelper.clearStyles(proxyImage);
+        this.alignmentHelper.clearStyles(proxyImage);
         this.repositionProxyImage(proxyImage);
         this.getImageResize().repositionElements();
     };

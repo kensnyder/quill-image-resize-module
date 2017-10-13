@@ -10,73 +10,81 @@ const centerAlignName = 'center';
 const rightAlignName = 'right';
 export const alignAttribute = 'data-align';
 
-class AlignmentHelper {
+export default class AlignmentHelper {
 
-    constructor() {
-        this.floatStyle = new Parchment.Attributor.Style('float', 'float');
-        this.marginStyle = new Parchment.Attributor.Style('margin', 'margin');
-        this.displayStyle = new Parchment.Attributor.Style('display', 'display');
-        this.alignAttribute = new Parchment.Attributor.Attribute(alignAttribute, alignAttribute);
-        this.alignments = [
-            {
-                icon: IconAlignLeft,
-                apply: (el) => {
-                    this.displayStyle.add(el, 'inline');
-                    this.floatStyle.add(el, 'left');
-                    this.marginStyle.add(el, '0 1em 1em 0');
-                    this.alignAttribute.add(el, leftAlignName);
-                },
-                isApplied: (el) => this.alignAttribute.value(el) === leftAlignName,
-            },
-            {
-                icon: IconAlignCenter,
-                apply: (el) => {
-                    this.displayStyle.add(el, 'block');
-                    this.floatStyle.remove(el);
-                    this.marginStyle.add(el, 'auto');
-                    this.alignAttribute.add(el, centerAlignName);
-                },
-                isApplied: (el) => this.alignAttribute.value(el) === centerAlignName,
-            },
-            {
-                icon: IconAlignRight,
-                apply: (el) => {
-                    this.displayStyle.add(el, 'inline');
-                    this.floatStyle.add(el, 'right');
-                    this.marginStyle.add(el, '0 0 1em 1em');
-                    this.alignAttribute.add(el, rightAlignName);
-                },
-                isApplied: (el) => this.alignAttribute.value(el) === rightAlignName,
-            },
-        ]
-    }
+	constructor() {
+		this.floatStyle = new Parchment.Attributor.Style('float', 'float');
+		this.marginStyle = new Parchment.Attributor.Style('margin', 'margin');
+		this.displayStyle = new Parchment.Attributor.Style('display', 'display');
+		this.alignAttribute = new Parchment.Attributor.Attribute(alignAttribute, alignAttribute);
+		this.alignments = {
+			left: {
+				icon: IconAlignLeft,
+				apply: (el) => this.applyLeftAlign(el),
+				isApplied: (el) => this.isAligned(el, leftAlignName),
+			},
+			center: {
+				icon: IconAlignCenter,
+				apply: (el) => this.applyCenterAlign(el),
+				isApplied: (el) => this.isAligned(el, centerAlignName),
+			},
+			right: {
+				icon: IconAlignRight,
+				apply: (el) => this.applyRightAlign(el),
+				isApplied: (el) => this.isAligned(el, rightAlignName),
+			},
+		};
+	}
 
-    clearStyles = (el) => {
-        this.floatStyle.remove(el);
-        this.marginStyle.remove(el);
-        this.displayStyle.remove(el);
-    };
+	isAligned = (el, alignType) => this.alignAttribute.value(el) === alignType;
 
-    clearData = (el) => {
-        this.alignAttribute.remove(el);
-    };
+	applyLeftAlign = (el) => {
+		this.alignAttribute.add(el, leftAlignName);
+		this.displayStyle.add(el, 'inline');
+		this.floatStyle.add(el, 'left');
+		this.marginStyle.add(el, '0 1em 1em 0');
+	};
 
-    clear = (el) => {
-        this.clearStyles(el);
-        this.clearData(el);
-    };
+	applyCenterAlign = (el) => {
+		this.alignAttribute.add(el, centerAlignName);
+		this.displayStyle.add(el, 'block');
+		this.floatStyle.remove(el);
+		this.marginStyle.add(el, 'auto');
+	};
 
-    getCurrentAlignment = (el) => {
-        for (const alignment of this.getAlignments()) {
-            if (alignment.isApplied(el)) {
-                return alignment;
-            }
-        }
+	applyRightAlign = (el) => {
+		this.alignAttribute.add(el, rightAlignName);
+		this.displayStyle.add(el, 'inline');
+		this.floatStyle.add(el, 'right');
+		this.marginStyle.add(el, '0 0 1em 1em');
+	};
 
-        return null;
-    };
+	clearStyles = (el) => {
+		this.floatStyle.remove(el);
+		this.marginStyle.remove(el);
+		this.displayStyle.remove(el);
+	};
 
-    getAlignments = () => this.alignments;
+	clearData = (el) => {
+		this.alignAttribute.remove(el);
+	};
+
+	clear = (el) => {
+		this.clearStyles(el);
+		this.clearData(el);
+	};
+
+	getCurrentAlignment = (el) => {
+		for (const alignment of this.getAlignments()) {
+			if (alignment.isApplied(el)) {
+				return alignment;
+			}
+		}
+
+		return null;
+	};
+
+    getAlignments = () => Object.keys(this.alignments).map(k => this.alignments[k]);
 }
 
-export default new AlignmentHelper();
+export const defaultAlignmentHelper = new AlignmentHelper();

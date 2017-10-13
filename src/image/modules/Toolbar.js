@@ -1,4 +1,3 @@
-import AlignmentHelper from '../../AlignmentHelper';
 import { BaseModule } from './BaseModule';
 
 export class Toolbar extends BaseModule {
@@ -20,7 +19,8 @@ export class Toolbar extends BaseModule {
 
   _addToolbarButtons = () => {
     const buttons = [];
-    AlignmentHelper.getAlignments().forEach((alignment, idx) => {
+    const alignmentHelper = this.options.alignmentHelper;
+    alignmentHelper.getAlignments().forEach((alignment, idx) => {
       const button = document.createElement('span');
       buttons.push(button);
       button.innerHTML = alignment.icon;
@@ -29,7 +29,7 @@ export class Toolbar extends BaseModule {
         buttons.forEach(button => button.style.filter = '');
         if (alignment.isApplied(this.img)) {
           // If applied, unapply
-          AlignmentHelper.clear(this.img);
+          alignmentHelper.clear(this.img);
         } else {
           // otherwise, select button and apply
           this._selectButton(button);

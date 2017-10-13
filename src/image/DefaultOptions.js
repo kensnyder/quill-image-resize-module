@@ -1,4 +1,7 @@
+import { defaultAlignmentHelper } from '../AlignmentHelper';
+
 export default {
+    alignmentHelper: defaultAlignmentHelper,
     modules: [
         'DisplaySize',
         'Toolbar',
