@@ -8,5 +8,3 @@ export default class DeleteHelper {
 		}
 	}
 }
-
-export const defaultDeleteHelper = new DeleteHelper();

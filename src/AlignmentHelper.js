@@ -86,9 +86,7 @@ export default class AlignmentHelper {
 		return null;
 	};
 
-    getAlignments() {
-    	return Object.keys(this.alignments).map(k => this.alignments[k]);
+	getAlignments() {
+		return Object.keys(this.alignments).map(k => this.alignments[k]);
 	}
 }
-
-export const defaultAlignmentHelper = new AlignmentHelper();
