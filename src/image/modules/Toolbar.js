@@ -4,7 +4,6 @@ export class Toolbar extends BaseModule {
 	onCreate() {
 		// Setup Toolbar
 		this.toolbar = document.createElement('div');
-		this.toolbar.classList.add('quill-resize-toolbar');
 		this.applyToolbarStyle(this.toolbar);
 		this.overlay.appendChild(this.toolbar);
 
@@ -23,7 +22,6 @@ export class Toolbar extends BaseModule {
 		const alignmentHelper = this.options.alignmentHelper;
 		alignmentHelper.getAlignments().forEach((alignment, idx) => {
 			const button = document.createElement('span');
-			button.classList.add('quill-resize-toolbar__button');
 			buttons.push(button);
 			button.innerHTML = alignment.icon;
 			button.addEventListener('click', () => {
@@ -52,8 +50,8 @@ export class Toolbar extends BaseModule {
 		});
 	};
 
-	applyToolbarStyle() {
-		Object.assign(this.toolbar.style, this.options.toolbarStyles);
+	applyToolbarStyle(toolbar) {
+		Object.assign(toolbar.style, this.options.toolbarStyles);
 	};
 
 	applyButtonStyle(button, idx) {
@@ -65,12 +63,10 @@ export class Toolbar extends BaseModule {
 	};
 
 	selectButton(button) {
-		button.classList.add('is-selected');
 		button.style.filter = 'invert(20%)';
 	};
 
 	deselectButton(button) {
-		button.classList.remove('is-selected');
 		button.style.filter = '';
 	}
 }
