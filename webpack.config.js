@@ -1,10 +1,10 @@
 var path = require('path');
 
 module.exports = {
-    entry: "./src/ImageResize.js",
+    entry: "./src/index.js",
     output: {
         path: __dirname,
-        library: 'ImageResize',
+        library: 'ImageResizeModule',
         libraryTarget: 'umd',
         filename: "image-resize.min.js"
     },
@@ -29,5 +29,8 @@ module.exports = {
                 }]
             }
         ]
+    },
+    externals: {
+        quill: 'quill'
     }
 };
