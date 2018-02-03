@@ -59,7 +59,7 @@ export class Resize extends BaseModule {
         // note which box
         this.dragBox = evt.target;
         // note starting mousedown position
-        if (typeof evt === MouseEvent) {
+        if (evt.type === 'mousedown') {
             this.dragStartX = evt.clientX
         } else {
             this.dragStartX = evt.touches[0].clientX
@@ -80,8 +80,8 @@ export class Resize extends BaseModule {
         // reset cursor everywhere
         this.setCursor('');
         // stop listening for movement and mouseup
-        document.addEventListener('touchmove', this.handleDrag);
-        document.addEventListener('touchend', this.handleMouseup);
+        document.removeEventListener('touchmove', this.handleDrag);
+        document.removeEventListener('touchend', this.handleMouseup);
         document.removeEventListener('mousemove', this.handleDrag);
         document.removeEventListener('mouseup', this.handleMouseup);
     };
@@ -93,7 +93,7 @@ export class Resize extends BaseModule {
         }
         // update image size
         let deltaX
-        if (typeof evt === MouseEvent) {
+        if (evt.type === 'mousemove') {
             deltaX = evt.clientX - this.dragStartX
         } else {
             deltaX = evt.changedTouches[0].clientX - this.dragStartX
