@@ -3,8 +3,8 @@ import IconAlignCenter from 'quill/assets/icons/align-center.svg';
 import IconAlignRight from 'quill/assets/icons/align-right.svg';
 import { BaseModule } from './BaseModule';
 
-import VQuill from 'quill'
-const Quill = window.Quill || VQuill
+import VQuill from 'quill';
+const Quill = window.Quill || VQuill;
 
 const Parchment = Quill.imports.parchment;
 const FloatStyle = new Parchment.Attributor.Style('float', 'float');
