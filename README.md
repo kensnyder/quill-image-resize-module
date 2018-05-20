@@ -15,9 +15,9 @@ a module that enables copy-paste and drag/drop for Quill.
 
 ```javascript
 import Quill from 'quill';
-import { ImageResize } from 'quill-image-resize-module';
+import { imageResize } from 'quill-image-resize-module';
 
-Quill.register('modules/imageResize', ImageResize);
+Quill.register('modules/imageResize', imageResize);
 
 const quill = new Quill(editor, {
     // ...
@@ -43,7 +43,7 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {
+        imageResize: {
             // See optional "config" below
         }
     }
@@ -58,7 +58,7 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {}
+        imageResize: {}
     }
 });
 ```
@@ -71,7 +71,7 @@ const quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {
+        imageResize: {
             modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
         }
     }
@@ -91,7 +91,7 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {
+        imageResize: {
             // ...
             handleStyles: {
                 backgroundColor: 'black',
@@ -115,7 +115,7 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {
+        imageResize: {
             // ...
             displayStyles: {
                 backgroundColor: 'black',
@@ -139,7 +139,7 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {
+        imageResize: {
             // ...
             toolbarStyles: {
                 backgroundColor: 'black',
@@ -176,7 +176,7 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {
+        imageResize: {
             modules: [ MyModule, Resize ],
             // ...
         }
