@@ -3,7 +3,7 @@ var path = require('path');
 module.exports = {
     entry: "./src/ImageResize.js",
     output: {
-        path: __dirname,
+        path: path.join(__dirname, 'dist'),
         library: 'ImageResize',
         libraryTarget: 'umd',
         filename: "image-resize.min.js"
@@ -13,11 +13,11 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: path.join(__dirname, 'src'),
-                exclude: /(node_modules|bower_components)/,
+                exclude: /(node_modules)/,
                 use: [{
                     loader: 'babel-loader',
                     options: {
-                        "presets": [["es2015", { "modules": false }]],
+                        "presets": [["env", { "modules": false }]],
                         "plugins": ["babel-plugin-transform-class-properties"]
                     }
                 }]

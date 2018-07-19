@@ -47,6 +47,7 @@ export class Resize extends BaseModule {
         box.style.height = `${this.options.handleStyles.height}px`;
 
         // listen for mousedown on each box
+        box.addEventListener('touchstart', this.handleMousedown, false);
         box.addEventListener('mousedown', this.handleMousedown, false);
         // add drag handle to document
         this.overlay.appendChild(box);
@@ -58,12 +59,19 @@ export class Resize extends BaseModule {
         // note which box
         this.dragBox = evt.target;
         // note starting mousedown position
-        this.dragStartX = evt.clientX;
+        if (evt.type === 'mousedown') {
+            this.dragStartX = evt.clientX
+        } else {
+            this.dragStartX = evt.touches[0].clientX
+        }
+
         // store the width before the drag
         this.preDragWidth = this.img.width || this.img.naturalWidth;
         // set the proper cursor everywhere
         this.setCursor(this.dragBox.style.cursor);
         // listen for movement and mouseup
+        document.addEventListener('touchmove', this.handleDrag, false);
+        document.addEventListener('touchend', this.handleMouseup, false);
         document.addEventListener('mousemove', this.handleDrag, false);
         document.addEventListener('mouseup', this.handleMouseup, false);
     };
@@ -72,6 +80,8 @@ export class Resize extends BaseModule {
         // reset cursor everywhere
         this.setCursor('');
         // stop listening for movement and mouseup
+        document.removeEventListener('touchmove', this.handleDrag);
+        document.removeEventListener('touchend', this.handleMouseup);
         document.removeEventListener('mousemove', this.handleDrag);
         document.removeEventListener('mouseup', this.handleMouseup);
     };
@@ -82,7 +92,13 @@ export class Resize extends BaseModule {
             return;
         }
         // update image size
-        const deltaX = evt.clientX - this.dragStartX;
+        let deltaX
+        if (evt.type === 'mousemove') {
+            deltaX = evt.clientX - this.dragStartX
+        } else {
+            deltaX = evt.changedTouches[0].clientX - this.dragStartX
+        }
+
         if (this.dragBox === this.boxes[0] || this.dragBox === this.boxes[3]) {
             // left-side resize handler; dragging right shrinks image
             this.img.width = Math.round(this.preDragWidth - deltaX);

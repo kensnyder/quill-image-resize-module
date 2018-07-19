@@ -39,6 +39,7 @@ Copy image-resize.min.js into your web root or include from node_modules
 ```
 
 ```javascript
+Quill.register('modules/imageResize', window.ImageResize.default);
 var quill = new Quill(editor, {
     // ...
     modules: {

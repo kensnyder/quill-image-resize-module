@@ -194,7 +194,3 @@ export default class ImageResize {
         }
     };
 }
-
-if (window.Quill) {
-    window.Quill.register('modules/imageResize', ImageResize);
-}
