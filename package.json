@@ -2,7 +2,7 @@
   "name": "quill-image-resize-module",
   "version": "3.0.0",
   "description": "A module for Quill rich text editor to allow images to be resized.",
-  "main": "./src/ImageResize.js",
+  "main": "image-resize.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "release": "webpack -p --progress --colors",
