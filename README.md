@@ -15,7 +15,7 @@ a module that enables copy-paste and drag/drop for Quill.
 
 ```javascript
 import Quill from 'quill';
-import { ImageResize } from 'quill-image-resize-module';
+import ImageResize from 'quill-image-resize-module';
 
 Quill.register('modules/imageResize', ImageResize);
 
