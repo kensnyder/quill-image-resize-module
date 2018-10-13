@@ -113,7 +113,8 @@ export default class ImageResize {
             this.hideOverlay();
         }
 
-        this.quill.setSelection(null);
+        // BUG: scroll top when setSelection method is called
+        // this.quill.setSelection(null);
 
         // prevent spurious text selection
         this.setUserSelect('none');
