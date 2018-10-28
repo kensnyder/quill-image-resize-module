@@ -43,7 +43,7 @@ var quill = new Quill(editor, {
     // ...
     modules: {
         // ...
-        ImageResize: {
+        imageResize: {
             // See optional "config" below
         }
     }
