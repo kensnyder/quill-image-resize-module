@@ -1,6 +1,6 @@
 {
   "name": "quill-image-resize-module",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A module for Quill rich text editor to allow images to be resized.",
   "main": "image-resize.min.js",
   "scripts": {
@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/kensnyder/quill-image-resize-module#readme",
   "devDependencies": {
-    "babel-cli": "^6.24.0",
+    "babel-cli": "6.26.0",
     "babel-eslint": "^7.2.1",
     "babel-loader": "^6.4.1",
     "babel-plugin-transform-class-properties": "^6.23.0",
