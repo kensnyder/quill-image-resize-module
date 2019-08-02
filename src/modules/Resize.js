@@ -15,7 +15,6 @@ export class Resize extends BaseModule {
     isMobile = this.checkMobile();
     
     onCreate = () => {
-        console.log(this.isMobile);
         // track resize handles
         this.boxes = [];
 
