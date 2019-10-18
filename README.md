@@ -117,6 +117,7 @@ var quill = new Quill(editor, {
         // ...
         ImageResize: {
             // ...
+			displaySize: true,
             displayStyles: {
                 backgroundColor: 'black',
                 border: 'none',
