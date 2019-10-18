@@ -18,6 +18,7 @@ export default {
         boxSizing: 'border-box',
         opacity: '0.80',
     },
+	displaySize: true,
     displayStyles: {
         position: 'absolute',
         font: '12px/1.0 Arial, Helvetica, sans-serif',
