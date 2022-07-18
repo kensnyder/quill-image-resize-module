@@ -188,13 +188,9 @@ export default class ImageResize {
     checkImage = (evt) => {
         if (this.img) {
             if (evt.keyCode == 46 || evt.keyCode == 8) {
-                window.Quill.find(this.img).deleteAt(0);
+                this.quill.find(this.img).deleteAt(0);
             }
             this.hide();
         }
     };
-}
-
-if (window.Quill) {
-    window.Quill.register('modules/imageResize', ImageResize);
 }

@@ -1,5 +1,5 @@
 {
-  "name": "quill-image-resize-module",
+  "name": "qing-quill-image-resize-module",
   "version": "3.0.0",
   "description": "A module for Quill rich text editor to allow images to be resized.",
   "main": "image-resize.min.js",
