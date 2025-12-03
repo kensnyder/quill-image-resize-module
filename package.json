@@ -48,8 +48,8 @@
     "webpack": "^2.3.3"
   },
   "dependencies": {
-    "lodash": "^4.17.4",
-    "quill": "^1.2.2",
+    "lodash": "^4.17.20",
+    "quill": "^2.0.3",
     "raw-loader": "^0.5.1"
   }
 }
